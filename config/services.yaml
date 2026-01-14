@@ -13,7 +13,7 @@ services:
         class: DigitaleDinge\CompanyBundle\EventListener\BackendAssetsListener
         arguments:
             - '@contao.routing.scope_matcher'
-            - '@assets.packages'#
+            - '@assets.packages'
 
     digitale_dinge_company.listener.data_container.social_media_options:
         class: DigitaleDinge\CompanyBundle\EventListener\DataContainer\SocialMediaOptionsListener
