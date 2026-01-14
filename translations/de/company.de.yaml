@@ -1,0 +1,5 @@
+company:
+    widget:
+        day:            Tag
+        open_from:      Von
+        open_to:        Bis

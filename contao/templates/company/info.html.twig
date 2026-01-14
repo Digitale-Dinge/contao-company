@@ -1,0 +1,9 @@
+{% block company_info %}
+    {% set company_model = company.get %}
+    {% if company_model|default %}
+        {{ company.name|default }}<br>
+        {{ company.street|default }}<br>
+        {{ (company.postal|default ~ ' ' ~ company.city|default)|trim(side: 'left') }}<br>
+        {{ company.country|default|country_name }}
+    {% endif %}
+{% endblock %}

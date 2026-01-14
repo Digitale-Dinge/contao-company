@@ -1,0 +1,49 @@
+{
+    "name": "digitaledinge/contao-company",
+    "description": "Manage companies and render company information across multiple domains",
+    "keywords": ["contao", "company", "twig"],
+    "type": "contao-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Digitale Dinge GmbH",
+            "homepage": "https://digitaledin.ge",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/digitale-dinge/contao-company/issues",
+        "source": "https://github.com/digitale-dinge/contao-company",
+        "forum": "https://community.contao.org"
+    },
+    "require": {
+        "php": "^8.3",
+        "contao/core-bundle": "^5.7"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.0",
+        "shipmonk/composer-dependency-analyser": "^1.8"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.0 || >=3.0",
+        "oveleon/contao-company-bundle": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "DigitaleDinge\\CompanyBundle\\": "src/"
+        }
+    },
+    "scripts": {
+        "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php"
+    },
+    "extra": {
+        "contao-manager-plugin": "DigitaleDinge\\CompanyBundle\\ContaoManager\\Plugin"
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": false,
+            "contao/manager-plugin": false,
+            "php-http/discovery": false
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set table_attributes = attrs()
+    .set('id', 'ctrl_' ~ id)
+    .addClass('company_opening_times')
+%}
+
+<table{{ table_attributes }}>
+    <thead>
+        <tr>
+            <th>{{ 'company.widget.day'|trans([], 'company') }}</th>
+            <th>{{ 'company.widget.open_from'|trans([], 'company') }}</th>
+            <th>{{ 'company.widget.open_to'|trans([], 'company') }}</th>
+            <th>{{ 'company.widget.open_from'|trans([], 'company') }}</th>
+            <th>{{ 'company.widget.open_to'|trans([], 'company') }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+            {% set row_index = loop.index0 %}
+            <tr>
+                <th scope="row">{{ ('DAYS.' ~ (loop.index % 7))|trans }}</th>
+                {% for item in row %}
+                <td>
+                    {% set time_attrs = attrs()
+                        .set('type', 'time')
+                        .set('name', "#{id}[#{row_index}][#{loop.index0}]")
+                        .set('id', "#{id}_#{loop.index0}_#{row_index}")
+                        .set('value', item)
+                        .addClass('tl_text')
+                    %}
+                    <input{{ time_attrs }}>
+                </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

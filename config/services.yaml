@@ -1,0 +1,43 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    digitale_dinge_company.company.company:
+        class: DigitaleDinge\CompanyBundle\Company\Company
+        public: true
+        arguments:
+            - '@request_stack'
+            - '@database_connection'
+
+    digitale_dinge_company.listener.backend_assets:
+        class: DigitaleDinge\CompanyBundle\EventListener\BackendAssetsListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@assets.packages'#
+
+    digitale_dinge_company.listener.data_container.social_media_options:
+        class: DigitaleDinge\CompanyBundle\EventListener\DataContainer\SocialMediaOptionsListener
+        arguments:
+            - '@event_dispatcher'
+
+    digitale_dinge_company.insert_tag.company:
+        class: DigitaleDinge\CompanyBundle\InsertTag\CompanyInsertTag
+        arguments:
+            - '@digitale_dinge_company.company.company'
+
+    digitale_dinge_company.twig.extension:
+        class: DigitaleDinge\CompanyBundle\Twig\Extension\CompanyExtension
+        public: true
+        arguments:
+            - '@digitale_dinge_company.twig.global.variable'
+
+    digitale_dinge_company.twig.global.variable:
+        class: DigitaleDinge\CompanyBundle\Twig\Global\CompanyVariable
+        arguments:
+            - '@digitale_dinge_company.company.company'
+
+    digitale_dinge_company.twig.company_runtime:
+        class: DigitaleDinge\CompanyBundle\Twig\Runtime\CompanyRuntime
+
+    # Autowiring aliases
+    DigitaleDinge\CompanyBundle\Company\Company: '@digitale_dinge_company.company.company'

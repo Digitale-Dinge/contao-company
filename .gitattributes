@@ -1,0 +1,4 @@
+/.editorconfig export-ignore
+/.ide-twig.json export-ignore
+/.gitignore export-ignore
+/depcheck.php export-ignore

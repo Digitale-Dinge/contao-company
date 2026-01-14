@@ -1,0 +1,5 @@
+tl_page:
+    company_legend: Company settings
+    dd_company:
+        - Company
+        - Here you can select the company for which the website data should be provided.

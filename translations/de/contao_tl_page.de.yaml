@@ -1,0 +1,5 @@
+tl_page:
+    company_legend: Unternehmens-Einstellungen
+    dd_company:
+        - Unternehmen
+        - Hier können Sie ein Unternehmen auswählen, für welches die Website-Daten bereitgestellt werden sollen.
