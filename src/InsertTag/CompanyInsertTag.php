@@ -13,6 +13,7 @@ use Contao\CoreBundle\InsertTag\Resolver\InsertTagResolverNestedResolvedInterfac
 use Contao\StringUtil;
 use DigitaleDinge\CompanyBundle\Company\Company;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
+use Twig\Environment;
 
 #[AsInsertTag('company')]
 #[AsInsertTag('company_id')]
@@ -20,8 +21,11 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 {
     private int|null $companyId = null;
 
-    public function __construct(private readonly Company $company)
-    {}
+    public function __construct(
+        private readonly Company $company,
+        private readonly Environment $twig,
+    ) {
+    }
 
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
@@ -54,7 +58,9 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 
         return match ($name) {
             'phone' => $this->getFromSerialized($company->phone_numbers, $position, $modifier),
+            'tel' => $this->getFromSerialized($company->phone_numbers, $position, 'tel'),
             'mail' => $this->getFromSerialized($company->emails, $position, $modifier),
+            'mailto' => $this->getFromSerialized($company->emails, $position, 'mailto'),
             'website' => $this->getFromSerialized($company->websites, $position, $modifier),
             'fax' => $this->getFromSerialized($company->fax_numbers, $position, $modifier),
             'additional' => $this->getFromSerialized($company->additional, $position, $modifier),
@@ -69,7 +75,20 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 
         $value = $values[$position - 1] ?? [];
 
-        return (string) reset($value);
+        $string = (string) reset($value);
+
+        if ($modifier) {
+            $string = match ($modifier) {
+                'tel', 'mailto' => $this->twig->render('@Contao/company/component/_link.html.twig', [
+                    'link' => $string,
+                    'href' => $string,
+                    'href_prefix' => $modifier . ':',
+                ]),
+                default => $string,
+            };
+        }
+
+        return $string;
     }
 
     private function getAddress(CompanyModel $company): string

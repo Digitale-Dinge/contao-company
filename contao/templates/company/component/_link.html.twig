@@ -3,7 +3,7 @@
     {% set link_attributes = attrs(link_attributes|default)
         .addClass(class|default)
         .set('href', href_prefix|default ~ href|default|encode_email, href|default)
-        .setIfExists('title', title)
+        .setIfExists('title', title|default)
     %}
     <{{ tag_name }}{{ link_attributes }}>{{ link|encode_email }}</{{ tag_name }}>
 {% endblock %}

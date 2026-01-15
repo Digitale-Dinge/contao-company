@@ -24,6 +24,7 @@ services:
         class: DigitaleDinge\CompanyBundle\InsertTag\CompanyInsertTag
         arguments:
             - '@digitale_dinge_company.company.company'
+            - '@twig'
 
     digitale_dinge_company.twig.extension:
         class: DigitaleDinge\CompanyBundle\Twig\Extension\CompanyExtension
