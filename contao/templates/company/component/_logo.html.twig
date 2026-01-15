@@ -1,0 +1,14 @@
+{% block company_logo %}
+    {% if company_model|default and company_model.logo|default %}
+        <div{{ attrs(company_logo_attributes|default).addClass('company_logo') }}>
+            {{ include('@Contao/component/_figure.html.twig', {
+                figure: figure(company_model.logo, null),
+                linkHref: app.request.baseUrl,
+                img_attributes: {
+                    class: 'logo ' ~ logo_class|default,
+                    alt: company_model.name,
+                },
+            }) }}
+        </div>
+    {% endif %}
+{% endblock %}

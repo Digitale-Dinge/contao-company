@@ -55,36 +55,37 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         }
 
         $name = $parameters[0] ?? null;
-        $position = (int) ($parameters[1] ?? 1);
-        $modifier = $parameters[2] ?? null;
+        $modifier = $parameters[1] ?? null;
 
         return match ($name) {
-            'phone' => $this->getFromSerialized($company->phone_numbers, $position, $modifier),
-            'tel' => $this->getFromSerialized($company->phone_numbers, $position, 'tel'),
-            'mail' => $this->getFromSerialized($company->emails, $position, $modifier),
-            'mailto' => $this->getFromSerialized($company->emails, $position, 'mailto'),
-            'website' => $this->getFromSerialized($company->websites, $position, $modifier),
-            'fax' => $this->getFromSerialized($company->fax_numbers, $position, $modifier),
-            'additional' => $this->getFromSerialized($company->additional, $position, $modifier),
-            'address' => $this->getAddress($company),
+            'additional' => $this->getFromSerialized($company->additional, $modifier),
+            'address' => $this->renderAddress($company, $modifier),
+            'fax' => $this->getFromSerialized($company->fax_numbers, $modifier),
+            'logo' => $this->renderLogo($company, $modifier),
+            'mail' => $this->getFromSerialized($company->emails, $modifier),
+            'mailto' => $this->getFromSerialized($company->emails, $modifier, 'mailto'),
+            'phone' => $this->getFromSerialized($company->phone_numbers, $modifier),
+            'tel' => $this->getFromSerialized($company->phone_numbers, $modifier, 'tel'),
+            'website' => $this->getFromSerialized($company->websites, $modifier),
             default => $company->{$name} ?? '',
         };
     }
 
-    private function getFromSerialized(string|null $string, int $position, string|null $modifier = null): string
+    private function getFromSerialized(string|null $string, string|null $position, string|null $extra = null): string
     {
+        $position ??= 1;
         $values = StringUtil::deserialize($string, true);
 
-            $value = $values[$position - 1] ?? [];
+        $value = $values[$position - 1] ?? [];
 
         $string = (string) reset($value);
 
-        if ($modifier) {
-            $string = match ($modifier) {
+        if ($extra) {
+            $string = match ($extra) {
                 'tel', 'mailto' => $this->twig->render('@Contao/company/component/_link.html.twig', [
                     'link' => $string,
                     'href' => $string,
-                    'href_prefix' => $modifier . ':',
+                    'href_prefix' => $extra . ':',
                 ]),
                 default => $string,
             };
@@ -93,8 +94,19 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         return $string;
     }
 
-    private function getAddress(CompanyModel $company): string
+    private function renderAddress(CompanyModel $company, string|null $modifier): string
     {
-        return '';
+        return $this->twig->render('@Contao/company/component/_address.html.twig', [
+            'company_model' => $company,
+            'include_name' => $modifier === 'name',
+        ]);
+    }
+
+    private function renderLogo(CompanyModel $company, string|null $modifier): string
+    {
+        return $this->twig->render('@Contao/company/component/_logo.html.twig', [
+            'company_model' => $company,
+            'logo_class' => $modifier
+        ]);
     }
 }

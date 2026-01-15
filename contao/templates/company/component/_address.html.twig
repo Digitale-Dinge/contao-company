@@ -1,0 +1,8 @@
+{% block company_address %}
+    {% if include_name|default %}
+        {{ include('@Contao/company/component/_name.html.twig') }}
+    {% endif %}
+    {{ company_model.street|default }}<br>
+    {{ (company_model.postal|default ~ ' ' ~ company_model.city|default)|trim(side: 'left') }}<br>
+    {{ company_model.country|default|country_name }}
+{% endblock %}
