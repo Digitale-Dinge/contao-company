@@ -65,6 +65,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'mail' => $this->getFromSerialized($company->emails, $modifier),
             'mailto' => $this->getFromSerialized($company->emails, $modifier, 'mailto'),
             'phone' => $this->getFromSerialized($company->phone_numbers, $modifier),
+            'socials' => $this->renderSocialMedia($company),
             'tel' => $this->getFromSerialized($company->phone_numbers, $modifier, 'tel'),
             'website' => $this->getFromSerialized($company->websites, $modifier),
             default => $company->{$name} ?? '',
@@ -107,6 +108,13 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         return $this->twig->render('@Contao/company/component/_logo.html.twig', [
             'company_model' => $company,
             'logo_class' => $modifier
+        ]);
+    }
+
+    private function renderSocialMedia(CompanyModel $company): string
+    {
+        return $this->twig->render('@Contao/company/component/_social_media.html.twig', [
+            'company_socials' => $company->socials,
         ]);
     }
 }

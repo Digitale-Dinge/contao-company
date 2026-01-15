@@ -1,11 +1,4 @@
 {% block company_social_media %}
-    {% for row in company.socials|deserialize %}
-        {% if row.social|default %}
-            {{ include('@Contao/company/component/_link.html.twig', {
-                link: row.social,
-                href: row.url,
-            }) }}
-            <br>
-        {% endif %}
-    {% endfor %}
+    {% set company_socials = company.socials|deserialize %}
+    {{ include('@Contao/company/component/_social_media.html.twig') }}
 {% endblock %}
