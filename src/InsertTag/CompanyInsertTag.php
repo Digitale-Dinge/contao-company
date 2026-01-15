@@ -33,6 +33,8 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             throw new InvalidInsertTagException('Missing parameters for insert tag.');
         }
 
+        $this->companyId = null;
+
         $parameters = $insertTag->getParameters()->all();
 
         if ('company_id' === $insertTag->getName()) {
@@ -73,7 +75,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         $values = StringUtil::deserialize($string, true);
 
-        $value = $values[$position - 1] ?? [];
+            $value = $values[$position - 1] ?? [];
 
         $string = (string) reset($value);
 
