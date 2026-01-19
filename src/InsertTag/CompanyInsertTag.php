@@ -72,27 +72,40 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         };
     }
 
-    private function getFromSerialized(string|null $string, string|null $position, string|null $extra = null): string
+    private function getFromSerialized(string|null $serialized, string|null $position, string|null $extra = null): string
     {
-        $position ??= 1;
-        $values = StringUtil::deserialize($string, true);
+        $string = $this->getValueByAliasOrId($position, StringUtil::deserialize($serialized, true));
 
-        $value = $values[$position - 1] ?? [];
-
-        $string = (string) reset($value);
-
-        if ($extra) {
-            $string = match ($extra) {
-                'tel', 'mailto' => $this->twig->render('@Contao/company/component/_link.html.twig', [
-                    'link' => $string,
-                    'href' => $string,
-                    'href_prefix' => $extra . ':',
-                ]),
-                default => $string,
-            };
+        if (null === $extra) {
+            return $string;
         }
 
-        return $string;
+        return match ($extra) {
+            'tel', 'mailto' => $this->twig->render('@Contao/company/component/_link.html.twig', [
+                'link' => $string,
+                'href' => $string,
+                'href_prefix' => $extra . ':',
+            ]),
+            default => $string,
+        };
+    }
+
+    private function getValueByAliasOrId(int|string|null $identifier, array $values): string
+    {
+        if (!isset($values[0]) || !\is_array($values[0])) {
+            return '';
+        }
+
+        if ($identifier === null) {
+            return (string) reset($values[0]);
+        } elseif (\is_numeric($identifier)) {
+            $value = $values[$identifier - 1] ?? [];
+            return (string) (count($value) === 1 ? reset($value) : $value['value'] ?? '');
+        }
+
+        $list = array_column($values, 'value', 'key');
+
+        return $list[$identifier] ?? '';
     }
 
     private function renderAddress(CompanyModel $company, string|null $modifier): string
@@ -118,3 +131,15 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         ]);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
