@@ -1,13 +1,60 @@
 tl_company:
-    general_legend:     Allgemein
-    address_legend:     Adresse
-    times_legend:       Öffnungs- und Schließzeiten
-    contact_legend:     Kontakt
-    misc_legend:        Sonstiges
+    general_legend:         Allgemein
+    address_legal_legend:   Anschrift und rechtliche Angaben
+    contact_legend:         Kontakt
+    times_legend:           Öffnungs- und Schließzeiten
+    misc_legend:            Sonstiges
 
     logo:
         - Logo
         - Hier können sie ein Logo auswählen, welches auf der Website ausgegeben werden kann.
+
+    name:
+        - Firma
+        - Hier können Sie einen Firmennamen eingeben.
+
+    street:
+        - Straße
+        - Bitte geben Sie den Straßennamen und die Hausnummer ein.
+
+    postal:
+        - Postleitzahl
+        - Bitte geben Sie die Postleitzahl ein.
+
+    city:
+        - Ort
+        - Bitte geben Sie den Namen des Ortes ein.
+
+    state:
+        - Staat
+        - Bitte geben Sie den Namen des Staates ein.
+
+    country:
+        - Land
+        - Bitte wählen Sie ein Land.
+
+    vat:
+        - Umsatzsteuer-ID
+        - Hier können Sie die Umsatzsteuer-ID eintragen.
+
+    emails:
+        - E-Mail-Adressen
+        - Bitte geben Sie eine oder mehrere gültige E-Mail-Adressen ein.
+
+    websites:
+        - Webseiten
+        - Hier können Sie eine oder mehrere Web-Adressen eingeben.
+
+    phone_numbers:
+        - Telefonnummern
+        - Bitte geben Sie eine oder mehrere Telefonnummern ein.
+
+    fax_numbers:
+        - Faxnummern
+        - Bitte geben Sie eine oder mehrere Faxnummern ein.
+
+    fax:
+        - Faxnummer
 
     opening_times:
         - Öffnungszeiten
@@ -16,11 +63,17 @@ tl_company:
     closing_times:
         - Schließzeiten
         - Hier können Sie Daten von - bis eingeben, zu welchen das Unternehmen geschlossen ist.
+        - Datum von
+        - Datum bis
 
     socials:
         - Social-Media
         - Hier können Sie Ihre Social-Media-Plattformen hinzufügen.
+        - Plattform
+        - URL
 
     additional:
         - Zusätzliche Informationen
-        - Hier können Sie zusätzliche Informationen im Key/Value Format eintragen.
+        - Hier können Sie zusätzliche Informationen eintragen. Der erste Wert dient als alias für Insert-Tags.
+        - Alias
+        - Wert

@@ -34,9 +34,9 @@ $GLOBALS['TL_DCA']['tl_company'] = [
     'palettes' => [
         'default' =>
             '{general_legend},name,logo;' .
-            '{address_legend},street,postal,city,state,country;' .
+            '{address_legal_legend},street,postal,city,state,country,vat;' .
+            '{contact_legend},emails,websites,phone_numbers,fax_numbers;' .
             '{times_legend},opening_times,closing_times;' .
-            '{contact_legend},phone_numbers,emails,websites,fax_numbers;' .
             '{misc_legend:hide},socials,additional;',
     ],
     'fields' => [
@@ -47,7 +47,6 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
         ],
         'name' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['company'],
             'inputType' => 'text',
             'eval' => [
                 'mandatory' => true,
@@ -62,12 +61,11 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'fieldType' => 'radio',
                 'extensions' => '%contao.image.valid_extensions%',
                 'filesOnly' => true,
-                'tl_class' => 'clr',
+                'tl_class' => 'w50',
             ],
             'sql' => 'binary(16) NULL',
         ],
         'street' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['street'],
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
@@ -75,23 +73,20 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
         ],
         'postal' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['postal'],
             'inputType' => 'text',
             'eval' => [
-                'tl_class' => 'w50',
+                'tl_class' => 'w25',
             ],
             'sql' => ['type' => 'string', 'length' => 32, 'default' => ''],
         ],
         'city' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['city'],
             'inputType' => 'text',
             'eval' => [
-                'tl_class' => 'w50',
+                'tl_class' => 'w25',
             ],
             'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
         ],
         'state' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['state'],
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
@@ -99,7 +94,6 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
         ],
         'country' => [
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['country'],
             'inputType' => 'select',
             'eval' => [
                 'tl_class' => 'w50',
@@ -108,6 +102,107 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             ],
             'options_callback' => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
             'sql' => ['type' => 'string', 'length' => 2, 'default' => ''],
+        ],
+        'vat' => [
+            'inputType' => 'text',
+            'eval' => [
+                'tl_class' => 'w50',
+            ],
+            'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+        ],
+        'emails' => [
+            'inputType' => 'rowWizard',
+            'exclude' => true,
+            'fields' => [
+                'email' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_member']['email'][0],
+                    'inputType' => 'text',
+                    'eval' => [
+                        'maxlength' => 255,
+                        'rgxp' => 'email',
+                        'decodeEntities' => true,
+                    ],
+                ],
+            ],
+            'eval' => ['tl_class' => 'w50 clr'],
+            'sql' => 'text NULL',
+        ],
+        'websites' => [
+            'inputType' => 'rowWizard',
+            'exclude' => true,
+            'fields' => [
+                'website' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_member']['website'][0],
+                    'inputType' => 'text',
+                    'eval' => [
+                        'rgxp' => HttpUrlListener::RGXP_NAME,
+                        'maxlength' => 255,
+                        'decodeEntities' => true,
+                    ],
+                ],
+            ],
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => 'text NULL',
+        ],
+        'phone_numbers' => [
+            'inputType' => 'rowWizard',
+            'exclude' => true,
+            'fields' => [
+                'phone' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_member']['phone'][0],
+                    'inputType' => 'text',
+                    'eval' => [
+                        'maxlength' => 64,
+                        'rgxp' => 'phone',
+                        'decodeEntities' => true,
+                    ],
+                ],
+            ],
+            'eval' => ['tl_class' => 'w50 clr'],
+            'sql' => 'text NULL',
+        ],
+        'fax_numbers' => [
+            'inputType' => 'rowWizard',
+            'exclude' => true,
+            'fields' => [
+                'fax' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['fax'][0],
+                    'inputType' => 'text',
+                    'eval' => [
+                        'maxlength' => 64,
+                        'rgxp' => 'phone',
+                        'decodeEntities' => true,
+                    ],
+                ],
+            ],
+            'eval' => ['tl_class' => 'w50'],
+            'sql' => 'text NULL',
+        ],
+        'socials' => [
+            'inputType' => 'rowWizard',
+            'exclude' => true,
+            'fields' => [
+                'social' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['socials'][2],
+                    'inputType' => 'select',
+                    'eval' => [
+                        'includeBlankOption' => true,
+                        'chosen' => true,
+                        'tl_class' => 'clr',
+                    ],
+                ],
+                'url' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['socials'][3],
+                    'inputType' => 'text',
+                    'eval' => [
+                        'rgxp' => HttpUrlListener::RGXP_NAME,
+                        'maxlength' => 255,
+                        'decodeEntities' => true,
+                    ],
+                ],
+            ],
+            'eval' => ['tl_class' => 'w50 clr', 'sortable' => false],
+            'sql' => 'text NULL',
         ],
         'opening_times' => [
             'inputType' => 'openingTimesTable',
@@ -119,119 +214,31 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             'exclude' => true,
             'fields' => [
                 'start' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][2],
                     'inputType' => 'date',
                 ],
                 'stop' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][3],
                     'inputType' => 'date',
                 ],
             ],
             'eval' => ['tl_class' => 'w50', 'sortable' => false],
             'sql' => "text NULL",
         ],
-        'phone_numbers' => [
-            'inputType' => 'rowWizard',
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['phone'],
-            'exclude' => true,
-            'fields' => [
-                'phone' => [
-                    'inputType' => 'text',
-                    'eval' => [
-                        'maxlength' => 64,
-                        'rgxp' => 'phone',
-                        'decodeEntities' => true,
-                    ],
-                ],
-            ],
-            'eval' => ['tl_class' => 'w100 clr'],
-            'sql' => 'text NULL',
-        ],
-        'emails' => [
-            'inputType' => 'rowWizard',
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['email'],
-            'exclude' => true,
-            'fields' => [
-                'email' => [
-                    'inputType' => 'text',
-                    'eval' => [
-                        'maxlength' => 255,
-                        'rgxp' => 'email',
-                        'decodeEntities' => true,
-                    ],
-                ],
-            ],
-            'eval' => ['tl_class' => 'w100 clr'],
-            'sql' => 'text NULL',
-        ],
-        'websites' => [
-            'inputType' => 'rowWizard',
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['website'],
-            'exclude' => true,
-            'fields' => [
-                'website' => [
-                    'inputType' => 'text',
-                    'eval' => [
-                        'rgxp' => HttpUrlListener::RGXP_NAME,
-                        'maxlength' => 255,
-                        'decodeEntities' => true,
-                    ],
-                ],
-            ],
-            'eval' => ['tl_class' => 'w100 clr'],
-            'sql' => 'text NULL',
-        ],
-        'fax_numbers' => [
-            'inputType' => 'rowWizard',
-            'label' => &$GLOBALS['TL_LANG']['tl_member']['fax'],
-            'exclude' => true,
-            'fields' => [
-                'fax' => [
-                    'inputType' => 'text',
-                    'eval' => [
-                        'maxlength' => 64,
-                        'rgxp' => 'phone',
-                        'decodeEntities' => true,
-                    ],
-                ],
-            ],
-            'eval' => ['tl_class' => 'w100 clr'],
-            'sql' => 'text NULL',
-        ],
-        'socials' => [
-            'inputType' => 'rowWizard',
-            'exclude' => true,
-            'fields' => [
-                'social' => [
-                    'inputType' => 'select',
-                    'eval' => [
-                        'includeBlankOption' => true,
-                        'chosen' => true,
-                        'tl_class' => 'clr',
-                    ],
-                ],
-                'url' => [
-                    'inputType' => 'text',
-                    'eval' => [
-                        'rgxp' => HttpUrlListener::RGXP_NAME,
-                        'maxlength' => 255,
-                        'decodeEntities' => true,
-                    ],
-                ],
-            ],
-            'eval' => ['tl_class' => 'w100 clr', 'sortable' => false],
-            'sql' => 'text NULL',
-        ],
         'additional' => [
             'inputType' => 'rowWizard',
             'exclude' => true,
             'fields' => [
-                'hint' => [
+                'key' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['additional'][2],
                     'inputType' => 'text',
                     'eval' => [
                         'maxlength' => 255,
                         'decodeEntities' => true,
                     ],
                 ],
-                'info' => [
+                'value' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['additional'][3],
                     'inputType' => 'text',
                     'eval' => [
                         'maxlength' => 255,
@@ -239,7 +246,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w100 clr', 'sortable' => false],
+            'eval' => ['tl_class' => 'w50', 'sortable' => false],
             'sql' => 'text NULL',
         ],
     ],

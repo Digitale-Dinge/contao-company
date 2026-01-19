@@ -1,13 +1,18 @@
 {
     "name": "digitaledinge/contao-company",
-    "description": "Manage companies and render company information across multiple domains",
-    "keywords": ["contao", "company", "twig"],
+    "description": "Manage company information globally and display it across one or more domains using Twig templates or insert tags.",
+    "keywords": ["contao", "company", "twig", "insert-tags", ""],
     "type": "contao-bundle",
     "license": "MIT",
     "authors": [
         {
             "name": "Digitale Dinge GmbH",
             "homepage": "https://digitaledin.ge",
+            "role": "Developer"
+        },
+        {
+            "name": "Sebastian Zoglowek",
+            "homepage": "https://github.com/zoglo",
             "role": "Developer"
         }
     ],

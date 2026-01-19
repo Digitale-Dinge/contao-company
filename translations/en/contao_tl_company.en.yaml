@@ -1,13 +1,60 @@
 tl_company:
-    general_legend:     General
-    address_legend:     Address
-    times_legend:       Opening and closing times
-    contact_legend:     Contact
-    misc_legend:        Miscellaneous
+    general_legend:         General
+    address_legal_legend:   Address and legal information
+    contact_legend:         Contact
+    times_legend:           Opening and closing times
+    misc_legend:            Miscellaneous
 
     logo:
         - Logo
         - Here you can select a logo that can be displayed on the website.
+
+    name:
+        - Company
+        - Here you can enter a company name.
+
+    street:
+        - Street
+        - Please enter the street name and number.
+
+    postal:
+        - Postal code
+        - Please enter the postal code.
+
+    city:
+        - City
+        - Please enter the name of the city.
+
+    state:
+        - State
+        - Please enter the name of the state.
+
+    country:
+        - Country
+        - Please select the country.
+
+    emails:
+        - E-mail addresses
+        - Please enter one ore more valid e-mail addresses.
+
+    websites:
+        - Websites
+        - Here you can enter one or more web addresses.
+
+    vat:
+        - VAT ID
+        - Here you can enter the VAT ID.
+
+    phone_numbers:
+        - Phone numbers
+        - Please enter one or more phone numbers.
+
+    fax_numbers:
+        - Fax numbers
+        - Please enter one or more fax numbers.
+
+    fax:
+        - Fax number
 
     opening_times:
         - Opening times
@@ -16,11 +63,17 @@ tl_company:
     closing_times:
         - Closing times
         - Here you can enter date ranges during which the company is closed.
+        - Date from
+        - Date until
 
     socials:
         - Social media
         - Here you can add your social media platforms.
+        - Platform
+        - URL
 
     additional:
         - Additional information
         - Here you can enter additional information in key/value format.
+        - Alias
+        - Value
