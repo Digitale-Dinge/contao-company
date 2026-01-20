@@ -25,6 +25,7 @@ services:
         arguments:
             - '@digitale_dinge_company.company.company'
             - '@twig'
+            - '@event_dispatcher'
 
     digitale_dinge_company.twig.extension:
         class: DigitaleDinge\CompanyBundle\Twig\Extension\CompanyExtension

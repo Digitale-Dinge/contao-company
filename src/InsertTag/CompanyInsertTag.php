@@ -12,7 +12,9 @@ use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\InsertTagResolverNestedResolvedInterface;
 use Contao\StringUtil;
 use DigitaleDinge\CompanyBundle\Company\Company;
+use DigitaleDinge\CompanyBundle\Event\AddSocialMediaOptionsEvent;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
 
 #[AsInsertTag('company')]
@@ -24,6 +26,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
     public function __construct(
         private readonly Company $company,
         private readonly Environment $twig,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -66,6 +69,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'mailto' => $this->getFromSerialized($company->emails, $modifier, 'mailto'),
             'phone' => $this->getFromSerialized($company->phone_numbers, $modifier),
             'socials' => $this->renderSocialMedia($company),
+            'social' => $this->getSocial($company->socials, $modifier),
             'tel' => $this->getFromSerialized($company->phone_numbers, $modifier, 'tel'),
             'website' => $this->getFromSerialized($company->websites, $modifier),
             default => $company->{$name} ?? '',
@@ -108,6 +112,27 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         return $list[$identifier] ?? '';
     }
 
+    private function getSocial(string|null $serialized, int|string|null $identifier): string
+    {
+        $options = $this->getFlattenedSocialMediaOptions();
+        $socials = StringUtil::deserialize($serialized, true);
+
+        foreach ($socials as $social) {
+            $key = $social['social'] ?? null;
+
+            if ($key !== $identifier || !isset($options[$key])) {
+                continue;
+            }
+
+            return $this->twig->render('@Contao/company/component/_link.html.twig', [
+                'link' => $options[$key],
+                'href' => $social['url'] ?? null,
+            ]);
+        }
+
+        return '';
+    }
+
     private function renderAddress(CompanyModel $company, string|null $modifier): string
     {
         return $this->twig->render('@Contao/company/component/_address.html.twig', [
@@ -118,7 +143,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 
     private function renderLogo(CompanyModel $company, string|null $modifier): string
     {
-        return $this->twig->render('@Contao/company/component/_logo.html.twig', [
+        return $this->twig->render('@Contao/company/logo.html.twig', [
             'company_model' => $company,
             'logo_class' => $modifier
         ]);
@@ -126,20 +151,17 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 
     private function renderSocialMedia(CompanyModel $company): string
     {
-        return $this->twig->render('@Contao/company/component/_social_media.html.twig', [
+        return $this->twig->render('@Contao/company/social_media.html.twig', [
             'company_socials' => $company->socials,
         ]);
     }
+
+    private function getFlattenedSocialMediaOptions(): array
+    {
+        $event = new AddSocialMediaOptionsEvent();
+        $this->eventDispatcher->dispatch($event);
+        $options = $event->getSocialMedia();
+
+        return array_merge(...array_values($options));
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
