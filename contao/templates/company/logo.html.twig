@@ -1,7 +1,8 @@
-{% block company_logo %}
+{%- block company_logo %}
     {% set company_model = company_model|default(company.get) %}
     {% if company_model|default and company_model.logo|default %}
-        <div{{ attrs(company_logo_attributes|default).addClass('company_logo') }}>
+        <{{ tag_name|default('div') }}{{ attrs(company_logo_attributes|default).addClass('company_logo') }}>
+            {{- logo_prefix|default -}}
             {{ include('@Contao/component/_figure.html.twig', {
                 figure: figure(company_model.logo, null),
                 linkHref: app.request.baseUrl,
@@ -10,6 +11,7 @@
                     alt: company_model.name,
                 },
             }) }}
-        </div>
+            {{- logo_suffix|default -}}
+        </{{ tag_name|default('div') }}>
     {% endif %}
-{% endblock %}
+{% endblock -%}
