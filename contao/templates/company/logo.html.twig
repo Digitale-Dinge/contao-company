@@ -1,6 +1,15 @@
-{% block company_logo_wrapper %}
-    {% set company_model = company.get %}
+{% block company_logo %}
+    {% set company_model = company_model|default(company.get) %}
     {% if company_model|default and company_model.logo|default %}
-        {{ include('@Contao/company/component/_logo.html.twig') }}
+        <div{{ attrs(company_logo_attributes|default).addClass('company_logo') }}>
+            {{ include('@Contao/component/_figure.html.twig', {
+                figure: figure(company_model.logo, null),
+                linkHref: app.request.baseUrl,
+                img_attributes: {
+                    class: 'logo ' ~ logo_class|default,
+                    alt: company_model.name,
+                },
+            }) }}
+        </div>
     {% endif %}
 {% endblock %}
