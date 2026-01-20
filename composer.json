@@ -23,7 +23,8 @@
     },
     "require": {
         "php": "^8.3",
-        "contao/core-bundle": "^5.7"
+        "contao/core-bundle": "^5.7",
+        "twig/intl-extra": "^3.18"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
