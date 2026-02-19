@@ -17,6 +17,7 @@ services:
 
     digitale_dinge_company.listener.data_container.social_media_options:
         class: DigitaleDinge\CompanyBundle\EventListener\DataContainer\SocialMediaOptionsListener
+        public: true
         arguments:
             - '@event_dispatcher'
 
