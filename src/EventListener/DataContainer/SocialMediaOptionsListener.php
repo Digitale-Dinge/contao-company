@@ -15,7 +15,7 @@ readonly class SocialMediaOptionsListener
     {}
 
     #[AsCallback('tl_company', 'fields.socials.attributes')]
-    public function setSocialMediaOptions(array $attributes, DataContainer $dc): array
+    public function getSocialMediaOptions(array $attributes, DataContainer $dc): array
     {
         $event = new AddSocialMediaOptionsEvent();
         $this->eventDispatcher->dispatch($event);
