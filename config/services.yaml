@@ -43,3 +43,4 @@ services:
 
     # Autowiring aliases
     DigitaleDinge\CompanyBundle\Company\Company: '@digitale_dinge_company.company.company'
+    DigitaleDinge\CompanyBundle\EventListener\DataContainer\SocialMediaOptionsListener: '@digitale_dinge_company.listener.data_container.social_media_options'
