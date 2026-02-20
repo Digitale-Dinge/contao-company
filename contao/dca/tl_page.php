@@ -14,7 +14,8 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['dd_company'] = [
 ];
 
 PaletteManipulator::create()
-    ->addLegend('company_legend', 'metadata_legend', PaletteManipulator::POSITION_APPEND)
+    ->addLegend('company_legend', 'global_legend', PaletteManipulator::POSITION_AFTER)
     ->addField('dd_company', 'company_legend', PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette(array_key_exists('rootfallback', $GLOBALS['TL_DCA']['tl_page']['palettes']) ? 'rootfallback' : 'root', 'tl_page')
+    ->applyToPalette('root', 'tl_page')
+    ->applyToPalette('rootfallback', 'tl_page')
 ;
