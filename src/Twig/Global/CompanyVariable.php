@@ -48,7 +48,7 @@ readonly class CompanyVariable
         return $this->company->get($id)?->state;
     }
 
-    public function country(int|null $id = null): string|null
+    public function getCountry(int|null $id = null): string|null
     {
         return $this->company->get($id)?->country;
     }
