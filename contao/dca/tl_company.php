@@ -201,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50 clr', 'sortable' => false],
+            'eval' => ['tl_class' => 'w50 clr', 'sortable' => true],
             'sql' => 'text NULL',
         ],
         'opening_times' => [
