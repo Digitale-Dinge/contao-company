@@ -8,6 +8,8 @@
                         {{ include('@Contao/company/component/_link.html.twig', {
                             link: row.social,
                             href: row.url,
+                            title: row.social,
+                            target_blank: true,
                         }) }}
                     </li>
                 {% endif -%}
