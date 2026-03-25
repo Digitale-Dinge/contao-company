@@ -4,6 +4,7 @@
         .addClass(class|default)
         .set('href', href_prefix|default ~ href|default|encode_email, href|default)
         .set('target', '_blank', target_blank|default(false))
+        .set('rel', 'noopener noreferrer', noreferrer|default(true))
         .setIfExists('title', title|default)
     %}
     <{{ tag_name }}{{ link_attributes }}>
