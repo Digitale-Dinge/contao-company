@@ -4,7 +4,7 @@
         <{{ tag_name|default('div') }}{{ attrs(company_logo_attributes|default).addClass('company_logo') }}>
             {{- logo_prefix|default -}}
             {{ include('@Contao/component/_figure.html.twig', {
-                figure: figure(company_model.logo, null, { linkHref: app.request.baseUrl }),
+                figure: figure(company_model.logo, null, { linkHref: app.request.baseUrl|default('/') }),
                 img_attributes: {
                     class: 'logo ' ~ logo_class|default,
                     alt: company_model.name,
