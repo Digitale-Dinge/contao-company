@@ -1,6 +1,30 @@
-# contao-company
+<h1 align="center">Contao Company</h1>
+<p align="center">
+    <a href="https://github.com/Digitale-Dinge/contao-company"><img src="https://img.shields.io/github/v/release/Digitale-Dinge/contao-company" alt="github version"/></a>
+    <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/dt/digitaledinge/contao-company?color=f47c00" alt="amount of downloads"/></a>
+    <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/dependency-v/digitaledinge/contao-company/php?color=474A8A" alt="minimum php version"></a>
+</p>
 
-Manage companies and render company information across multiple domains
+## Description
+
+Manage companies and render company information across multiple domains.
+
+## Setup
+
+1. **Create a company**
+
+   Navigate to Content → Companies and create your company, filling in the details you want to make available across
+   your site.
+
+2. **Assign to a root page**
+
+   For the company Twig global and insert tags to resolve automatically based on the current page context, assign your
+   company to the respective root page under Layout → Site Structure → Edit root page → Company.
+
+3. **Use in templates or RTE**
+
+   This bundle does not provide any frontend modules or content elements. It is intended to be used directly within your Twig templates via the company global variable or in text via insert tags.
+   Refer to the Twig Global section for available properties and examples.
 
 ## Insert Tags
 
