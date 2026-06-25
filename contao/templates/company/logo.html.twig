@@ -11,6 +11,7 @@
 
                 {{ include('@Contao/component/_figure.html.twig', {
                     figure: figure(company_model.logo, null, { linkHref: logoHref }),
+                    figure_attributes: { class: figure_class|default },
                     img_attributes: {
                         class: 'logo ' ~ logo_class|default,
                         alt: company_model.name,
