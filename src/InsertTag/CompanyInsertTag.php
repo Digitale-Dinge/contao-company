@@ -14,7 +14,7 @@ use Contao\StringUtil;
 use DigitaleDinge\CompanyBundle\Company\Company;
 use DigitaleDinge\CompanyBundle\Event\AddSocialMediaOptionsEvent;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
 
 #[AsInsertTag('company')]
