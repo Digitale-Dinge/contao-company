@@ -1,7 +1,7 @@
 {
     "name": "digitaledinge/contao-company",
     "description": "Manage company information globally and display it across one or more domains using Twig templates or insert tags.",
-    "keywords": ["contao", "company", "twig", "insert-tags", ""],
+    "keywords": ["contao", "company", "twig", "insert-tags"],
     "type": "contao-bundle",
     "license": "MIT",
     "authors": [
