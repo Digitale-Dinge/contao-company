@@ -1,0 +1,24 @@
+{
+    "license": "MIT",
+    "devDependencies": {
+        "@biomejs/biome": "^2.2",
+        "@symfony/webpack-encore": "^5.2",
+        "npm-run-all": "^4.1",
+        "postcss": "^8.5",
+        "postcss-loader": "^8.1",
+        "postcss-preset-env": "^10.3",
+        "stylelint": "^16.23",
+        "stylelint-config-standard": "^39.0"
+    },
+    "browserslist": [
+        "defaults"
+    ],
+    "scripts": {
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress",
+        "lint:js": "biome check --write --unsafe assets",
+        "lint:css": "stylelint --fix assets/styles",
+        "lint": "run-s lint:js lint:css"
+    }
+}
