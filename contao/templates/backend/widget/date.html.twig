@@ -1,0 +1,11 @@
+{% set date_attributes = attrs(attributes|default)
+    .set('type', 'date')
+    .set('name', name)
+    .set('id', 'ctrl_' ~ id)
+    .set('value', value|default)
+    .addClass(['tl_text', class|default])
+    .set('data-action', 'focus->contao--scroll-offset#store')
+    .set('data-contao--scroll-offset-target', 'autoFocus')
+%}
+
+<input{{ date_attributes }}>
