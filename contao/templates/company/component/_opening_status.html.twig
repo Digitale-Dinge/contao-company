@@ -1,0 +1,26 @@
+{% use '@Contao/component/_stylesheet.html.twig' %}
+
+{% block company_opening_status %}
+    {% set company_opening_status_attributes = attrs(company_opening_status_attributes|default)
+        .addClass('company_opening-status')
+        .set('data-company-opening-times', opening_times.statusConfig|merge({
+            labels: {
+                open: 'company.opening_times.open_until'|trans({}, 'company'),
+                closed: 'company.opening_times.closed'|trans({}, 'company'),
+            },
+        })|json_encode)
+        .set('hidden')
+    %}
+
+    <{{ tag_name|default('span') }}{{ company_opening_status_attributes }}></{{ tag_name|default('span') }}>
+
+    {% add 'company_opening_times_js' to head %}
+        <script src="{{ asset('opening-times.js', 'digitale_dinge_company') }}" defer></script>
+    {% endadd %}
+
+    {% add 'company_opening_times_css' to stylesheets %}
+        {% with { file: asset('opening-times.css', 'digitale_dinge_company') } %}
+            {{ block('stylesheet_component') }}
+        {% endwith %}
+    {% endadd %}
+{% endblock %}

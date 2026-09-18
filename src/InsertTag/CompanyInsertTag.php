@@ -12,6 +12,7 @@ use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\InsertTagResolverNestedResolvedInterface;
 use Contao\StringUtil;
 use DigitaleDinge\CompanyBundle\Company\Company;
+use DigitaleDinge\CompanyBundle\Company\OpeningTimes;
 use DigitaleDinge\CompanyBundle\Event\AddSocialMediaOptionsEvent;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -44,19 +45,21 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             $this->companyId = (int) array_shift($parameters);
         }
 
-        $result = $this->replaceInsertTag($parameters);
-
-        return new InsertTagResult($result, OutputType::html);
-    }
-
-    private function replaceInsertTag(array $parameters): string
-    {
         $company = $this->company->get($this->companyId);
 
         if (null === $company) {
-            return '';
+            return new InsertTagResult('');
         }
 
+        return new InsertTagResult(
+            $this->replaceInsertTag($company, $parameters),
+            OutputType::html,
+            cacheTags: ['contao.db.tl_company.'.$company->id],
+        );
+    }
+
+    private function replaceInsertTag(CompanyModel $company, array $parameters): string
+    {
         $name = $parameters[0] ?? null;
         $modifier = $parameters[1] ?? null;
 
@@ -64,6 +67,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'additional' => $this->getFromSerialized($company->additional, $modifier),
             'address' => $this->renderAddress($company, $modifier),
             'fax' => $this->getFromSerialized($company->fax_numbers, $modifier),
+            'is_open' => $this->renderOpeningStatus($company),
             'logo' => $this->renderLogo($company, $modifier),
             'mail' => $this->getFromSerialized($company->emails, $modifier),
             'mailto' => $this->getFromSerialized($company->emails, $modifier, 'mailto'),
@@ -146,6 +150,13 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         return $this->twig->render('@Contao/company/logo.html.twig', [
             'company_model' => $company,
             'logo_class' => $modifier
+        ]);
+    }
+
+    private function renderOpeningStatus(CompanyModel $company): string
+    {
+        return $this->twig->render('@Contao/company/component/_opening_status.html.twig', [
+            'opening_times' => new OpeningTimes($company),
         ]);
     }
 
