@@ -21,14 +21,4 @@ class CompanyExtension extends AbstractExtension implements GlobalsInterface
             'company' => $this->companyVariable,
         ];
     }
-
-    /*public function getFunctions(): array
-    {
-        return [
-            new TwigFunction(
-                'company',
-                [CompanyDataRuntime::class, 'getCompanyDetails']
-            ),
-        ];
-    }*/
 }
