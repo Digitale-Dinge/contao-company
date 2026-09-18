@@ -21,10 +21,15 @@ Manage companies and render company information across multiple domains.
    For the company Twig global and insert tags to resolve automatically based on the current page context, assign your
    company to the respective root page under Layout → Site Structure → Edit root page → Company.
 
-3. **Use in templates or RTE**
+3. **Use in templates, RTE or as content elements**
 
-   This bundle does not provide any frontend modules or content elements. It is intended to be used directly within your Twig templates via the company global variable or in text via insert tags.
-   Refer to the Twig Global section for available properties and examples.
+   Company data is available in Twig via the `company` global and in text via insert tags. Additional content elements
+   for **Opening times** and schema.org exist.
+
+4. **Optional: time zone**
+
+   Opening times are values in the company's time zone. Leave the field empty to use the time zone from the
+   Contao system settings. Set it when a company sits in a different zone than the app.
 
 ## Insert Tags
 
@@ -131,10 +136,20 @@ Phone numbers are stored as a list and can be accessed by their position (1-base
 
 ### Additional Fields
 
-| Insert tag                   | Description                            |
-|------------------------------|----------------------------------------|
+| Insert tag                   | Description                                |
+|------------------------------|--------------------------------------------|
 | `{{company::additional}}`    | Displays the first additional field value  |
 | `{{company::additional::2}}` | Displays the second additional field value |
+
+---
+
+### Opening Status
+
+| Insert tag             | Description                                                                            |
+|------------------------|----------------------------------------------------------------------------------------|
+| `{{company::is_open}}` | Renders the current open/closed status (`company/component/_opening_status.html.twig`) |
+
+The status is computed in the browser against the company's time zone.
 
 ---
 
@@ -150,7 +165,56 @@ All of the above insert tags are also available with `company_id`, passing the c
 {{company_id::5::address::name}}
 {{company_id::5::logo::my-class}}
 {{company_id::5::social::facebook}}
+{{company_id::5::is_open}}
 ```
+
+## Content Elements
+
+Leave the company selection empty to use the company assigned to the current root page, or pick one explicitly.
+
+### Opening times
+
+Renders the weekly schedule as a table, the closing periods as a list, and the live open/closed status. Options:
+
+| Option               | Description                                                    |
+|----------------------|----------------------------------------------------------------|
+| Company              | Explicit company, or empty for the current root page's company |
+| Abbreviated weekdays | `Mon` instead of `Monday`, localized via ICU                   |
+
+Template variants, selectable in the element's template dropdown:
+
+| Template                                          | Output                                                                |
+|---------------------------------------------------|-----------------------------------------------------------------------|
+| `content_element/company_opening_times`           | All seven days, closed days read "Closed"                             |
+| `content_element/company_opening_times/open_only` | Days without opening times are left out                               |
+| `content_element/company_opening_times/grouped`   | Consecutive days with identical times collapse: `Mon–Fri 08:00–17:00` |
+
+The templates work on a [`spatie/opening-hours`](https://github.com/spatie/opening-hours) object.
+
+```twig
+{% for day, hours in opening_times.openingHours.forWeek %}
+    {{ day|format_datetime(pattern: 'EEEE') }}:
+    {% for range in hours %}{{ range.start }}–{{ range.end }}{% else %}closed{% endfor %}
+{% endfor %}
+```
+
+Overlapping ranges entered in the backend are merged, so `08:00–13:00` and `12:00–17:00` become `08:00–17:00`.
+
+### Structured data
+
+Adds a schema.org `LocalBusiness` or `Organization` node to the page's JSON-LD and renders nothing visible. Options:
+
+| Option  | Description                                                                                          |
+|---------|------------------------------------------------------------------------------------------------------|
+| Company | Explicit company, or empty for the current root page's company                                       |
+| Type    | `LocalBusiness` (default) or `Organization`                                                          |
+| URL     | Used as `url` and `@id`. Empty uses the absolute URL of the current root page                        |
+
+Mapped fields: `name`, `url`, `@id`, `logo`, `address` as `PostalAddress`, first `telephone`, first `faxNumber`, first
+`email`, `vatID`, all socials as `sameAs`.
+Opening hours (`openingHoursSpecification`) and closing periods
+(`specialOpeningHoursSpecification`, closed days as `00:00`–`00:00`) are added for `LocalBusiness` only, since they are
+not `Organization` properties. Multiple elements for the same company on one page merge into one schema org node.
 
 ## Twig Global
 
