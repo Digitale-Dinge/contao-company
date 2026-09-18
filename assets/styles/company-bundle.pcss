@@ -8,12 +8,6 @@
         margin: 1px 0;
     }
 
-    thead {
-        th:first-child {
-            opacity: .5;
-        }
-    }
-
     tbody {
         th {
             vertical-align: bottom;
@@ -28,16 +22,22 @@
         }
     }
 
-    th:nth-child(4),
-    td:nth-child(4) {
-        padding-left: .5rem;
-    }
-
     th:first-child {
         padding-right: .5rem;
     }
 
     th:not(:first-child) {
         text-align: center;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+        padding-left: .5rem;
+    }
+
+    thead {
+        th:first-child {
+            opacity: .5;
+        }
     }
 }
