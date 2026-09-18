@@ -6,8 +6,19 @@ services:
         class: DigitaleDinge\CompanyBundle\Company\Company
         public: true
         arguments:
-            - '@request_stack'
-            - '@database_connection'
+            - '@contao.routing.page_finder'
+
+    digitale_dinge_company.controller.content_element.opening_times:
+        class: DigitaleDinge\CompanyBundle\Controller\ContentElement\OpeningTimesController
+        arguments:
+            - '@digitale_dinge_company.company.company'
+
+    digitale_dinge_company.controller.content_element.company_schema:
+        class: DigitaleDinge\CompanyBundle\Controller\ContentElement\CompanySchemaController
+        arguments:
+            - '@digitale_dinge_company.company.company'
+            - '@contao.routing.page_finder'
+            - '@contao.filesystem.virtual.files'
 
     digitale_dinge_company.listener.backend_assets:
         class: DigitaleDinge\CompanyBundle\EventListener\BackendAssetsListener
@@ -38,9 +49,6 @@ services:
         class: DigitaleDinge\CompanyBundle\Twig\Global\CompanyVariable
         arguments:
             - '@digitale_dinge_company.company.company'
-
-    digitale_dinge_company.twig.company_runtime:
-        class: DigitaleDinge\CompanyBundle\Twig\Runtime\CompanyRuntime
 
     # Autowiring aliases
     DigitaleDinge\CompanyBundle\Company\Company: '@digitale_dinge_company.company.company'
