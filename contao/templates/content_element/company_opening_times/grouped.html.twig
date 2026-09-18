@@ -1,0 +1,16 @@
+{% extends "@Contao/content_element/company_opening_times.html.twig" %}
+
+{% block day_rows %}
+    {% for group in opening_times.openingHours.forWeekConsecutiveDays %}
+        {% set hours = group.opening_hours %}
+        <tr>
+            <th scope="row">
+                {%- with { day: group.days|first } %}{{ block('day_label') }}{% endwith -%}
+                {%- if group.days|length > 1 -%}
+                    –{% with { day: group.days|last } %}{{ block('day_label') }}{% endwith %}
+                {%- endif -%}
+            </th>
+            <td>{{ block('day_times') }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}

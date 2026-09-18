@@ -1,0 +1,10 @@
+{% extends "@Contao/content_element/company_opening_times.html.twig" %}
+
+{% block day_rows %}
+    {% for day, hours in opening_times.openingHours.forWeek|filter(hours => hours|length > 0) %}
+        <tr>
+            <th scope="row">{{ block('day_label') }}</th>
+            <td>{{ block('day_times') }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block day_label %}{{ day|format_datetime(pattern: short_days ? 'EEE' : 'EEEE') }}{% endblock %}
+
+{% block day_times %}
+    {%- for range in hours -%}
+        <span class="company_opening-times__interval">{{ range.start }}–{{ range.end }}</span>
+    {%- else -%}
+        {{ 'company.opening_times.closed_all_day'|trans({}, 'company') }}
+    {%- endfor -%}
+{% endblock %}
+
+{% block day_rows %}
+    {% for day, hours in opening_times.openingHours.forWeek %}
+        <tr>
+            <th scope="row">{{ block('day_label') }}</th>
+            <td>{{ block('day_times') }}</td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block company_opening_status %}
+    {{ include('@Contao/company/component/_opening_status.html.twig') }}
+{% endblock %}
+
+{% block company_opening_times_table %}
+    <table class="company_opening-times__table">
+        <caption class="invisible">{{ 'company.opening_times.table_caption'|trans({}, 'company') }}</caption>
+        <thead class="invisible">
+            <tr>
+                <th scope="col">{{ 'company.opening_times.col_day'|trans({}, 'company') }}</th>
+                <th scope="col">{{ 'company.opening_times.col_times'|trans({}, 'company') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ block('day_rows') }}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block company_closing_times %}
+    {% if opening_times.closingTimes is not empty %}
+        <p class="company_closing-times__headline">{{ 'company.opening_times.closing_times'|trans({}, 'company') }}</p>
+        <ul class="company_closing-times">
+            {% for period in opening_times.closingTimes %}
+                <li>
+                    <time datetime="{{ period.from }}">{{ period.from|format_date }}</time>
+                    {%- if period.to != period.from %} – <time datetime="{{ period.to }}">{{ period.to|format_date }}</time>{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {{ block('company_opening_status') }}
+    {{ block('company_opening_times_table') }}
+    {{ block('company_closing_times') }}
+{% endblock %}
