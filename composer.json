@@ -24,7 +24,8 @@
     "require": {
         "php": "^8.3",
         "contao/core-bundle": "^5.7 || ^6.0",
-        "doctrine/dbal": "^3.7 || ^4.3",
+        "spatie/opening-hours": "^4.2",
+        "spatie/schema-org": "^3.10 || ^4.0",
         "symfony/asset": "^7.4 || ^8.1",
         "symfony/dependency-injection": "^7.4 || ^8.1",
         "symfony/deprecation-contracts": "^3.0",
@@ -32,6 +33,8 @@
         "symfony/event-dispatcher-contracts": "^3.0",
         "symfony/http-foundation": "^7.4 || ^8.1",
         "symfony/http-kernel": "^7.4 || ^8.1",
+        "symfony/routing": "^7.4 || ^8.1",
+        "symfony/uid": "^7.4 || ^8.1",
         "twig/intl-extra": "^3.18",
         "twig/twig": "^3.21"
     },
