@@ -1,0 +1,10 @@
+CTE:
+    company: Company
+
+    company_opening_times:
+        - Opening times
+        - Renders the opening times of a company including the current status.
+
+    company_schema:
+        - Structured data
+        - Adds structured data for a company to the page (no visible output).

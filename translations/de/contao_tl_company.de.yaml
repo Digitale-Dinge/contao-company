@@ -56,6 +56,10 @@ tl_company:
     fax:
         - Faxnummer
 
+    timezone:
+        - Zeitzone
+        - Leer lassen, um die Zeitzone aus den Systemeinstellungen zu verwenden.
+
     opening_times:
         - Öffnungszeiten
         - Hier können Sie Ihre Öffnungszeiten eintragen. Bei Pausen können zwei Zeiten eingetragen werden.

@@ -1,0 +1,10 @@
+CTE:
+    company: Unternehmen
+
+    company_opening_times:
+        - Öffnungszeiten
+        - Gibt die Öffnungszeiten eines Unternehmens inklusive des aktuellen Status aus.
+
+    company_schema:
+        - Strukturierte Daten
+        - Fügt der Seite strukturierte Daten eines Unternehmens hinzu (keine sichtbare Ausgabe).

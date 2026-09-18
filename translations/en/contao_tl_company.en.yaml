@@ -56,6 +56,10 @@ tl_company:
     fax:
         - Fax number
 
+    timezone:
+        - Time zone
+        - Leave empty to use the time zone from the system settings.
+
     opening_times:
         - Opening times
         - Here you can enter your opening hours. If there are breaks, two time ranges can be entered.

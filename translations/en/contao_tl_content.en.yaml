@@ -1,0 +1,18 @@
+tl_content:
+    company_legend: Company settings
+
+    company:
+        - Company
+        - Leave empty to use the company of the current root page.
+
+    company_short_days:
+        - Abbreviate weekdays
+        - Shows "Mon" instead of "Monday".
+
+    company_schema_type:
+        - Type
+        - Opening hours are only part of a LocalBusiness, see https://schema.org/LocalBusiness
+
+    company_schema_url:
+        - URL
+        - Rendered as "url" and "@id". Leave empty to use the URL of the current root page.

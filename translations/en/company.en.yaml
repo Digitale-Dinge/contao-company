@@ -4,6 +4,15 @@ company:
         open_from:      From
         open_to:        To
 
+    opening_times:
+        open_until:     "Open today until %time%"
+        closed:         Currently closed
+        closed_all_day: Closed
+        closing_times:  Closing times
+        table_caption:  Opening times by weekday
+        col_day:        Weekday
+        col_times:      Times
+
     social:
         github: GitHub
         gitlab: GitLab

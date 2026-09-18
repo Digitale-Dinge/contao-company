@@ -1,0 +1,18 @@
+tl_content:
+    company_legend: Unternehmens-Einstellungen
+
+    company:
+        - Unternehmen
+        - Leer lassen, um das Unternehmen der aktuellen Root-Seite zu verwenden.
+
+    company_short_days:
+        - Wochentage abkürzen
+        - Zeigt "Mo" statt "Montag" an.
+
+    company_schema_type:
+        - Typ
+        - Öffnungszeiten sind nur Bestandteil eines LocalBusiness, siehe https://schema.org/LocalBusiness
+
+    company_schema_url:
+        - URL
+        - Wird als "url" und "@id" ausgegeben. Leer lassen, um die URL der aktuellen Startseite zu verwenden.

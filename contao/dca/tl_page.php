@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Doctrine\DBAL\Types\Types;
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['dd_company'] = [
     'inputType' => 'select',
     'exclude' => true,
     'foreignKey' => "tl_company.CONCAT(name, ' (ID: ', id, ')')",
     'eval' => ['includeBlankOption' => true, 'tl_class' => 'w50 clr'],
-    'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
+    'sql' => ['type' => Types::INTEGER, 'unsigned' => true, 'default' => 0],
     'relation' => ['type' => 'hasOne', 'load' => 'lazy'],
 ];
 
