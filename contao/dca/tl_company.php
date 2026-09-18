@@ -6,6 +6,8 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Types\Types;
 
 System::loadLanguageFile('tl_member');
 
@@ -36,15 +38,15 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             '{general_legend},name,logo;' .
             '{address_legal_legend},street,postal,city,state,country,vat;' .
             '{contact_legend},emails,websites,phone_numbers,fax_numbers;' .
-            '{times_legend},opening_times,closing_times;' .
+            '{times_legend},timezone,opening_times,closing_times;' .
             '{misc_legend:hide},socials,additional;',
     ],
     'fields' => [
         'id' => [
-            'sql' => ['type' => 'integer', 'unsigned' => true, 'autoincrement' => true],
+            'sql' => ['type' => Types::INTEGER, 'unsigned' => true, 'autoincrement' => true],
         ],
         'tstamp' => [
-            'sql' => ['type' => 'integer', 'unsigned' => true, 'default' => 0],
+            'sql' => ['type' => Types::INTEGER, 'unsigned' => true, 'default' => 0],
         ],
         'name' => [
             'inputType' => 'text',
@@ -53,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'tl_class' => 'w50',
                 'decodeEntities' => true,
             ],
-            'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
         ],
         'logo' => [
             'inputType' => 'fileTree',
@@ -63,35 +65,35 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'filesOnly' => true,
                 'tl_class' => 'w50',
             ],
-            'sql' => 'binary(16) NULL',
+            'sql' => ['type' => Types::BINARY, 'length' => 16, 'fixed' => true, 'notnull' => false],
         ],
         'street' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
             ],
-            'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
         ],
         'postal' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w25',
             ],
-            'sql' => ['type' => 'string', 'length' => 32, 'default' => ''],
+            'sql' => ['type' => Types::STRING, 'length' => 32, 'default' => ''],
         ],
         'city' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w25',
             ],
-            'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
         ],
         'state' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
             ],
-            'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
         ],
         'country' => [
             'inputType' => 'select',
@@ -101,14 +103,14 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'chosen' => true,
             ],
             'options_callback' => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
-            'sql' => ['type' => 'string', 'length' => 2, 'default' => ''],
+            'sql' => ['type' => Types::STRING, 'length' => 2, 'default' => ''],
         ],
         'vat' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
             ],
-            'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
         ],
         'emails' => [
             'inputType' => 'rowWizard',
@@ -125,7 +127,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 ],
             ],
             'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => 'text NULL',
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
         'websites' => [
             'inputType' => 'rowWizard',
@@ -142,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 ],
             ],
             'eval' => ['tl_class' => 'w50'],
-            'sql' => 'text NULL',
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
         'phone_numbers' => [
             'inputType' => 'rowWizard',
@@ -159,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 ],
             ],
             'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => 'text NULL',
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
         'fax_numbers' => [
             'inputType' => 'rowWizard',
@@ -176,7 +178,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 ],
             ],
             'eval' => ['tl_class' => 'w50'],
-            'sql' => 'text NULL',
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
         'socials' => [
             'inputType' => 'rowWizard',
@@ -202,12 +204,18 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 ],
             ],
             'eval' => ['tl_class' => 'w50 clr', 'sortable' => true],
-            'sql' => 'text NULL',
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+        ],
+        'timezone' => [
+            'inputType' => 'select',
+            'options_callback' => static fn () => array_values(DateTimeZone::listIdentifiers()),
+            'eval' => ['chosen' => true, 'tl_class' => 'w25 clr', 'includeBlankOption' => true],
+            'sql' => ['type' => Types::STRING, 'length' => 64, 'default' => ''],
         ],
         'opening_times' => [
             'inputType' => 'openingTimesTable',
             'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => "text NULL",
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
         'closing_times' => [
             'inputType' => 'rowWizard',
@@ -223,7 +231,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 ],
             ],
             'eval' => ['tl_class' => 'w50', 'sortable' => false],
-            'sql' => "text NULL",
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
         'additional' => [
             'inputType' => 'rowWizard',
@@ -247,7 +255,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 ],
             ],
             'eval' => ['tl_class' => 'w50', 'sortable' => false],
-            'sql' => 'text NULL',
+            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
     ],
 ];

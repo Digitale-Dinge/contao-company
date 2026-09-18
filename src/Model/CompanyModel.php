@@ -17,6 +17,8 @@ use Contao\Model\Collection;
  * @property string  $city
  * @property string  $state
  * @property string  $country
+ * @property string  $vat
+ * @property string  $timezone
  * @property string  $opening_times
  * @property string  $closing_times
  * @property string  $phone_numbers
@@ -37,6 +39,8 @@ use Contao\Model\Collection;
  * @method static CompanyModel|null findOneByCity($val, array $opt=[])
  * @method static CompanyModel|null findOneByState($val, array $opt=[])
  * @method static CompanyModel|null findOneByCountry($val, array $opt=[])
+ * @method static CompanyModel|null findOneByVat($val, array $opt=[])
+ * @method static CompanyModel|null findOneByTimezone($val, array $opt=[])
  * @method static CompanyModel|null findOneByOpening_times($val, array $opt=[])
  * @method static CompanyModel|null findOneByClosing_times($val, array $opt=[])
  * @method static CompanyModel|null findOneByPhone_numbers($val, array $opt=[])
@@ -54,6 +58,8 @@ use Contao\Model\Collection;
  * @method static Collection|CompanyModel[]|CompanyModel|null findByCity($val, array $opt=[])
  * @method static Collection|CompanyModel[]|CompanyModel|null findByState($val, array $opt=[])
  * @method static Collection|CompanyModel[]|CompanyModel|null findByCountry($val, array $opt=[])
+ * @method static Collection|CompanyModel[]|CompanyModel|null findByVat($val, array $opt=[])
+ * @method static Collection|CompanyModel[]|CompanyModel|null findByTimezone($val, array $opt=[])
  * @method static Collection|CompanyModel[]|CompanyModel|null findByOpening_times($val, array $opt=[])
  * @method static Collection|CompanyModel[]|CompanyModel|null findByClosing_times($val, array $opt=[])
  * @method static Collection|CompanyModel[]|CompanyModel|null findByPhone_numbers($val, array $opt=[])
@@ -75,6 +81,8 @@ use Contao\Model\Collection;
  * @method static integer countByCity($val, array $opt=[])
  * @method static integer countByState($val, array $opt=[])
  * @method static integer countByCountry($val, array $opt=[])
+ * @method static integer countByVat($val, array $opt=[])
+ * @method static integer countByTimezone($val, array $opt=[])
  * @method static integer countByOpening_times($val, array $opt=[])
  * @method static integer countByClosing_times($val, array $opt=[])
  * @method static integer countByPhone_numbers($val, array $opt=[])
