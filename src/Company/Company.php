@@ -4,42 +4,45 @@ declare(strict_types=1);
 
 namespace DigitaleDinge\CompanyBundle\Company;
 
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\PageModel;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
-use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class Company
 {
     private array $cache = [];
 
     public function __construct(
-        readonly private RequestStack $requestStack,
-        readonly private Connection $connection,
+        readonly private PageFinder $pageFinder,
     ) {
     }
 
     public function get(int|string|null $id = null): CompanyModel|null
     {
-        if (null === $id) {
-            return $this->getByPageModel();
+        if (!$id) {
+            return $this->getForCurrentPage();
         }
 
-        return $this->cache[(int) $id] ??= CompanyModel::findById($id);
+        return $this->getForId((int) $id);
     }
 
-    private function getByPageModel(): CompanyModel|null
+    public function getForId(int $id): CompanyModel|null
     {
-        $pageModel = $this->requestStack->getCurrentRequest()?->attributes->get('pageModel');
-
-        if (!($pageModel instanceof PageModel)) {
+        if (0 === $id) {
             return null;
         }
 
-        if (0 === ($companyId = $this->connection->fetchOne('SELECT dd_company FROM tl_page WHERE id=?', [$pageModel->rootId]))) {
+        return $this->cache[$id] ??= CompanyModel::findById($id);
+    }
+
+    public function getForCurrentPage(): CompanyModel|null
+    {
+        if (!$page = $this->pageFinder->getCurrentPage()) {
             return null;
         }
 
-        return $this->cache[(int) $companyId] ??= CompanyModel::findById($companyId);
+        $rootPage = PageModel::findById($page->loadDetails()->rootId);
+
+        return $this->getForId((int) ($rootPage?->dd_company ?? 0));
     }
 }
