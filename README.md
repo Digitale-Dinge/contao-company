@@ -1,6 +1,6 @@
 <h1 align="center">Contao Company</h1>
 <p align="center">
-    <a href="https://github.com/Digitale-Dinge/contao-company"><img src="https://img.shields.io/github/v/release/Digitale-Dinge/contao-company" alt="github version"/></a>
+    <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/v/digitaledinge/contao-company" alt="packagist version"/></a>
     <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/dt/digitaledinge/contao-company?color=f47c00" alt="amount of downloads"/></a>
     <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/dependency-v/digitaledinge/contao-company/php?color=474A8A" alt="minimum php version"></a>
 </p>
