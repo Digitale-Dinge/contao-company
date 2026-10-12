@@ -102,7 +102,6 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'includeBlankOption' => true,
                 'chosen' => true,
             ],
-            'options_callback' => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
             'sql' => ['type' => Types::STRING, 'length' => 2, 'default' => ''],
         ],
         'vat' => [

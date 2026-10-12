@@ -28,6 +28,11 @@ services:
             - '@contao.routing.scope_matcher'
             - '@assets.packages'
 
+    digitale_dinge_company.listener.data_container.country_options:
+        class: DigitaleDinge\CompanyBundle\EventListener\DataContainer\CountryOptionsListener
+        arguments:
+            - '@contao.intl.countries'
+
     digitale_dinge_company.listener.data_container.social_media_options:
         class: DigitaleDinge\CompanyBundle\EventListener\DataContainer\SocialMediaOptionsListener
         public: true
