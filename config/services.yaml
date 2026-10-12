@@ -21,6 +21,7 @@ services:
             - '@contao.routing.page_finder'
             - '@contao.filesystem.virtual.files'
             - '@contao.insert_tag.parser'
+            - '@contao.routing.response_context_accessor'
 
     digitale_dinge_company.listener.backend_assets:
         class: DigitaleDinge\CompanyBundle\EventListener\BackendAssetsListener

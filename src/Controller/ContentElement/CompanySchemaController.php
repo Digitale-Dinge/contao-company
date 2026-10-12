@@ -11,13 +11,12 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\StringUtil;
 use DigitaleDinge\CompanyBundle\Company\Company;
 use DigitaleDinge\CompanyBundle\Company\OpeningTimes;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Spatie\SchemaOrg\LocalBusiness;
 use Spatie\SchemaOrg\Organization;
 use Spatie\SchemaOrg\Schema;
@@ -34,19 +33,21 @@ class CompanySchemaController extends AbstractContentElementController
         private readonly PageFinder $pageFinder,
         private readonly VirtualFilesystemInterface $filesStorage,
         private readonly InsertTagParser $insertTagParser,
+        private readonly ResponseContextAccessor $responseContextAccessor,
     ) {
     }
 
-    /**
-     * @throws NotFoundExceptionInterface|ContainerExceptionInterface
-     */
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if (!($companyModel = $this->company->get($model->company)) instanceof CompanyModel) {
+        $companyId = $model->company;
+
+        if (!($companyModel = $this->company->get(is_numeric($companyId) ? (int) $companyId : null)) instanceof CompanyModel) {
             return new Response();
         }
 
-        $responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext();
+        $responseContext = $this->responseContextAccessor->getResponseContext();
+        $type = $model->company_schema_type;
+        $url = $model->company_schema_url;
 
         if ($responseContext?->has(JsonLdManager::class)) {
             $responseContext
@@ -55,8 +56,8 @@ class CompanySchemaController extends AbstractContentElementController
                 ->set(
                     $this->getSchema(
                         $companyModel,
-                        $model->company_schema_type,
-                        (string) $model->company_schema_url ?: $this->getRootPageUrl($request),
+                        \is_string($type) ? $type : null,
+                        \is_string($url) && '' !== $url ? $url : $this->getRootPageUrl($request),
                     ),
                     'company_'.$companyModel->id,
                 )
