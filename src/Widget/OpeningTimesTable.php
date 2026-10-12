@@ -36,9 +36,11 @@ class OpeningTimesTable extends Widget
             ++$rowCount;
         }
 
-        for ($i = 0, $c = \count($this->varValue); $i < $c; ++$i) {
+        foreach (array_values($this->varValue) as $i => $row) {
+            $row = \is_array($row) ? $row : [];
+
             for ($j = 0; $j <= 3; ++$j) {
-                $rows[$i][$j] = self::specialcharsValue($this->varValue[$i][$j] ?? '');
+                $rows[$i][$j] = self::specialcharsValue($row[$j] ?? '');
             }
         }
 

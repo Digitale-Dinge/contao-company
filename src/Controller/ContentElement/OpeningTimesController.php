@@ -10,6 +10,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use DigitaleDinge\CompanyBundle\Company\Company;
 use DigitaleDinge\CompanyBundle\Company\OpeningTimes;
+use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,7 +23,9 @@ class OpeningTimesController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if (!($companyModel = $this->company->get($model->company)) instanceof \DigitaleDinge\CompanyBundle\Model\CompanyModel) {
+        $companyId = $model->company;
+
+        if (!($companyModel = $this->company->get(is_numeric($companyId) ? (int) $companyId : null)) instanceof CompanyModel) {
             return new Response();
         }
 

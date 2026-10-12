@@ -10,6 +10,7 @@ use Contao\StringUtil;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 use Spatie\OpeningHours\Day;
 use Spatie\OpeningHours\OpeningHours;
+use Spatie\OpeningHours\TimeRange;
 
 final class OpeningTimes
 {
@@ -205,6 +206,10 @@ final class OpeningTimes
         $ranges = [];
 
         foreach ($this->getOpeningHours()->forDay($day) as $range) {
+            if (!$range instanceof TimeRange) {
+                continue;
+            }
+
             $ranges[] = [
                 'opens' => (string) $range->start(),
                 'closes' => (string) $range->end(),

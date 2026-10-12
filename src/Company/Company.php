@@ -47,6 +47,8 @@ class Company
 
         $rootPage = $this->framework->getAdapter(PageModel::class)->findById($page->loadDetails()->rootId);
 
-        return $this->getForId((int) ($rootPage->dd_company ?? 0));
+        $companyId = $rootPage?->dd_company;
+
+        return $this->getForId(is_numeric($companyId) ? (int) $companyId : 0);
     }
 }
