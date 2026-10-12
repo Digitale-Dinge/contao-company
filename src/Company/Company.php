@@ -11,6 +11,9 @@ use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 
 class Company
 {
+    /**
+     * @var array<int, CompanyModel|null>
+     */
     private array $cache = [];
 
     public function __construct(
@@ -36,7 +39,13 @@ class Company
 
         $this->framework->initialize();
 
-        return $this->cache[$id] ??= $this->framework->getAdapter(CompanyModel::class)->findById($id);
+        if (isset($this->cache[$id])) {
+            return $this->cache[$id];
+        }
+
+        $companyModel = $this->framework->getAdapter(CompanyModel::class)->findById($id);
+
+        return $this->cache[$id] = $companyModel instanceof CompanyModel ? $companyModel : null;
     }
 
     public function getForCurrentPage(): CompanyModel|null

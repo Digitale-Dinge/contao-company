@@ -73,6 +73,9 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         );
     }
 
+    /**
+     * @param list<string> $parameters
+     */
     private function replaceInsertTag(CompanyModel $company, array $parameters): string
     {
         $name = $parameters[0] ?? null;
@@ -91,7 +94,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'social' => $this->getSocial($company->socials, $modifier),
             'tel' => $this->getFromSerialized($company->phone_numbers, $modifier, 'tel'),
             'website' => $this->getFromSerialized($company->websites, $modifier),
-            default => $company->{$name} ?? '',
+            default => null === $name ? '' : $this->toString($company->{$name}),
         };
     }
 
@@ -113,6 +116,9 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         };
     }
 
+    /**
+     * @param array<mixed> $values
+     */
     private function getValueByAliasOrId(int|string|null $identifier, array $values): string
     {
         if (!isset($values[0]) || !\is_array($values[0])) {
@@ -124,12 +130,21 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         if (is_numeric($identifier)) {
             $value = $values[(int) $identifier - 1] ?? [];
 
-            return (string) (1 === \count($value) ? reset($value) : $value['value'] ?? '');
+            if (!\is_array($value)) {
+                return '';
+            }
+
+            return $this->toString(1 === \count($value) ? reset($value) : $value['value'] ?? '');
         }
 
         $list = array_column($values, 'value', 'key');
 
-        return $list[$identifier] ?? '';
+        return $this->toString($list[$identifier] ?? '');
+    }
+
+    private function toString(mixed $value): string
+    {
+        return \is_scalar($value) ? (string) $value : '';
     }
 
     private function getSocial(string|null $serialized, int|string|null $identifier): string
@@ -138,6 +153,10 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         $socials = StringUtil::deserialize($serialized, true);
 
         foreach ($socials as $social) {
+            if (!\is_array($social)) {
+                continue;
+            }
+
             $key = $social['social'] ?? null;
 
             if (!\is_string($key) || $key !== $identifier || !isset($options[$key])) {
@@ -184,6 +203,9 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         ]);
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getFlattenedSocialMediaOptions(): array
     {
         $event = new AddSocialMediaOptionsEvent();

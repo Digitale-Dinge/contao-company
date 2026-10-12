@@ -82,27 +82,44 @@ class CompanySchemaController extends AbstractContentElementController
         $openingTimes = new OpeningTimes($company, $this->insertTagParser);
         $schema = 'Organization' === $type ? Schema::organization() : Schema::localBusiness();
 
-        return $schema
-            ->name($company->name)
-            ->setProperty('url', $url)
-            ->setProperty('@id', $url)
-            ->setProperty('logo', $this->getLogoUrl($company->logo))
-            ->telephone($this->getColumn($company->phone_numbers, 'phone')[0] ?? null)
-            ->faxNumber($this->getColumn($company->fax_numbers, 'fax')[0] ?? null)
-            ->email($this->getColumn($company->emails, 'email')[0] ?? null)
-            ->vatID($company->vat)
-            ->setProperty('sameAs', $this->getColumn($company->socials, 'url') ?: null)
-            ->if([] !== $address->getProperties(), static fn (LocalBusiness|Organization $schema) => $schema->address($address))
-            ->if($schema instanceof LocalBusiness, static fn (LocalBusiness $schema) => $schema
-                ->setProperty('openingHoursSpecification', $openingTimes->getSchemaSpecification() ?: null)
-                ->setProperty('specialOpeningHoursSpecification', $openingTimes->getSchemaSpecialSpecification() ?: null),
-            )
-        ;
+        $schema->name($company->name);
+        $schema->setProperty('url', $url);
+        $schema->setProperty('@id', $url);
+        $schema->setProperty('logo', $this->getLogoUrl($company->logo));
+        $schema->setProperty('telephone', $this->getColumn($company->phone_numbers, 'phone')[0] ?? null);
+        $schema->setProperty('faxNumber', $this->getColumn($company->fax_numbers, 'fax')[0] ?? null);
+        $schema->setProperty('email', $this->getColumn($company->emails, 'email')[0] ?? null);
+        $schema->vatID($company->vat);
+        $schema->setProperty('sameAs', $this->getColumn($company->socials, 'url') ?: null);
+
+        if ([] !== $address->getProperties()) {
+            $schema->address($address);
+        }
+
+        if ($schema instanceof LocalBusiness) {
+            $schema->setProperty('openingHoursSpecification', $openingTimes->getSchemaSpecification() ?: null);
+            $schema->setProperty('specialOpeningHoursSpecification', $openingTimes->getSchemaSpecialSpecification() ?: null);
+        }
+
+        return $schema;
     }
 
+    /**
+     * @return list<string>
+     */
     private function getColumn(string|null $serialized, string $key): array
     {
-        return array_values(array_filter(array_column(StringUtil::deserialize($serialized, true), $key)));
+        $values = [];
+
+        foreach (StringUtil::deserialize($serialized, true) as $row) {
+            $value = \is_array($row) ? $row[$key] ?? null : null;
+
+            if (\is_string($value) && $value) {
+                $values[] = $value;
+            }
+        }
+
+        return $values;
     }
 
     private function getLogoUrl(string|null $uuid): string|null

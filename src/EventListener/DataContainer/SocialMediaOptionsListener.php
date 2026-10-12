@@ -15,6 +15,11 @@ readonly class SocialMediaOptionsListener
     {
     }
 
+    /**
+     * @param array{fields: array<string, array<string, mixed>>, ...} $attributes
+     *
+     * @return array{fields: array<string, array<string, mixed>>, ...}
+     */
     #[AsCallback('tl_company', 'fields.socials.attributes')]
     public function getSocialMediaOptions(array $attributes, DataContainer $dc): array
     {

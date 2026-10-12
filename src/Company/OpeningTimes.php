@@ -12,12 +12,24 @@ use Spatie\OpeningHours\Day;
 use Spatie\OpeningHours\OpeningHours;
 use Spatie\OpeningHours\TimeRange;
 
+/**
+ * @phpstan-type Range array{opens: string, closes: string}
+ * @phpstan-type ClosingPeriod array{from: string, from_time: string|null, to: string, to_time: string|null, reason: string}
+ * @phpstan-type SpecialDay array{ranges: list<Range>, reason: string}
+ * @phpstan-type ClosedDay array{windows: list<array{int, int}>, reasons: list<string>}
+ */
 final class OpeningTimes
 {
     private OpeningHours|null $openingHours = null;
 
+    /**
+     * @var list<ClosingPeriod>|null
+     */
     private array|null $closingTimes = null;
 
+    /**
+     * @var array<string, SpecialDay>|null
+     */
     private array|null $specialOpeningHours = null;
 
     public function __construct(
@@ -36,7 +48,8 @@ final class OpeningTimes
         $week = [];
 
         foreach (Day::cases() as $day) {
-            $week[$day->value] = $this->createWeekdayRanges((array) ($rows[$day->toISO() - 1] ?? []));
+            $row = $rows[$day->toISO() - 1] ?? [];
+            $week[$day->value] = $this->createWeekdayRanges(\is_array($row) ? $row : []);
         }
 
         return $this->openingHours = OpeningHours::createAndMergeOverlappingRanges($week);
@@ -52,16 +65,22 @@ final class OpeningTimes
         }
     }
 
+    /**
+     * @return list<ClosingPeriod>
+     */
     public function getClosingTimes(): array
     {
         if (null !== $this->closingTimes) {
             return $this->closingTimes;
         }
 
-        $periods = array_values(array_filter(array_map(
-            $this->createClosingPeriod(...),
-            StringUtil::deserialize($this->company->closing_times, true),
-        )));
+        $periods = [];
+
+        foreach (StringUtil::deserialize($this->company->closing_times, true) as $row) {
+            if (\is_array($row) && null !== ($period = $this->createClosingPeriod($row))) {
+                $periods[] = $period;
+            }
+        }
 
         usort(
             $periods,
@@ -72,7 +91,7 @@ final class OpeningTimes
     }
 
     /**
-     * @return array<string, array{ranges: list<array{opens: string, closes: string}>, reason: string}>
+     * @return array<string, SpecialDay>
      *
      * @throws \DateMalformedStringException
      */
@@ -82,7 +101,17 @@ final class OpeningTimes
             return $this->specialOpeningHours;
         }
 
-        $closedDates = array_merge_recursive([], ...array_map($this->getClosedWindows(...), $this->getClosingTimes()));
+        $closedDates = [];
+
+        foreach ($this->getClosingTimes() as $period) {
+            foreach ($this->getClosedWindows($period) as $date => $closedDay) {
+                $closedDates[$date] = [
+                    'windows' => [...$closedDates[$date]['windows'] ?? [], ...$closedDay['windows']],
+                    'reasons' => [...$closedDates[$date]['reasons'] ?? [], ...$closedDay['reasons']],
+                ];
+            }
+        }
+
         $specialOpeningHours = [];
 
         foreach ($closedDates as $date => $closedDate) {
@@ -102,6 +131,9 @@ final class OpeningTimes
         return $this->specialOpeningHours = $specialOpeningHours;
     }
 
+    /**
+     * @return array{timezone: string, days: array<int, list<Range>>, specialOpeningHours: array<string, list<Range>>}
+     */
     public function getStatusConfig(): array
     {
         $days = [];
@@ -122,6 +154,9 @@ final class OpeningTimes
         return $this->getOpeningHours()->asStructuredData();
     }
 
+    /**
+     * @return list<array<string, string>>
+     */
     public function getSchemaSpecialSpecification(): array
     {
         $specialOpeningHours = $this->getSpecialOpeningHours();
@@ -133,6 +168,11 @@ final class OpeningTimes
         ));
     }
 
+    /**
+     * @param array<mixed> $row
+     *
+     * @return list<string>
+     */
     private function createWeekdayRanges(array $row): array
     {
         $row = array_values($row);
@@ -152,14 +192,22 @@ final class OpeningTimes
         return $ranges;
     }
 
+    /**
+     * @param array<mixed> $row
+     *
+     * @return ClosingPeriod|null
+     */
     private function createClosingPeriod(array $row): array|null
     {
-        $from = $this->normalizeDate($row['start'] ?? null);
+        if (null === ($from = $this->normalizeDate($row['start'] ?? null))) {
+            return null;
+        }
+
         $to = $this->normalizeDate($row['stop'] ?? null) ?? $from;
         $fromTime = $this->normalizeTime($row['start_time'] ?? null);
         $toTime = $this->normalizeTime($row['stop_time'] ?? null);
 
-        if (null === $from || $to.' '.($toTime ?? '24:00') <= $from.' '.($fromTime ?? '00:00')) {
+        if ($to.' '.($toTime ?? '24:00') <= $from.' '.($fromTime ?? '00:00')) {
             return null;
         }
 
@@ -168,10 +216,15 @@ final class OpeningTimes
             'from_time' => $fromTime,
             'to' => $to,
             'to_time' => $toTime,
-            'reason' => trim((string) ($row['reason'] ?? '')),
+            'reason' => \is_string($row['reason'] ?? null) ? trim($row['reason']) : '',
         ];
     }
 
+    /**
+     * @param ClosingPeriod $period
+     *
+     * @return array<string, ClosedDay>
+     */
     private function getClosedWindows(array $period): array
     {
         $dates = new \DatePeriod(
@@ -199,7 +252,7 @@ final class OpeningTimes
     }
 
     /**
-     * @return list<array{opens: string, closes: string}>
+     * @return list<Range>
      */
     private function getRanges(Day $day): array
     {
@@ -254,6 +307,11 @@ final class OpeningTimes
         ]));
     }
 
+    /**
+     * @param SpecialDay $specialDay
+     *
+     * @return list<array<string, string>>
+     */
     private function createSpecialSpecifications(string $date, array $specialDay): array
     {
         $description = $this->parseReason($specialDay['reason']);
@@ -286,7 +344,7 @@ final class OpeningTimes
     }
 
     /**
-     * @param array{opens: string, closes: string} $range
+     * @param Range $range
      *
      * @return array{int, int}
      */
@@ -298,7 +356,7 @@ final class OpeningTimes
     /**
      * @param array{int, int} $range
      *
-     * @return array{opens: string, closes: string}
+     * @return Range
      */
     private function toTimeRange(array $range): array
     {
