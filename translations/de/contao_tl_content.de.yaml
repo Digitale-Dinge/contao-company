@@ -9,6 +9,10 @@ tl_content:
         - Wochentage abkürzen
         - Zeigt "Mo" statt "Montag" an.
 
+    company_next_opening:
+        - Nächste Öffnung anzeigen
+        - Zeigt "Öffnet heute um 14:00 Uhr" statt "Aktuell geschlossen", wenn das Unternehmen heute noch öffnet.
+
     company_schema_type:
         - Typ
         - Öffnungszeiten sind nur Bestandteil eines LocalBusiness, siehe https://schema.org/LocalBusiness

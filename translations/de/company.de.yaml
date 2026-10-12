@@ -7,6 +7,9 @@ company:
     opening_times:
         open_until:     "Heute geöffnet bis %time% Uhr"
         closed:         Aktuell geschlossen
+        opens_at:       "Öffnet heute um %time% Uhr"
+        from_time:      "ab %time% Uhr"
+        until_time:     "bis %time% Uhr"
         closed_all_day: Geschlossen
         closing_times:  Schließzeiten
         table_caption:  Öffnungszeiten nach Wochentagen

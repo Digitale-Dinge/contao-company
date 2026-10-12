@@ -19,11 +19,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
 
 #[AsInsertTag('company')]
-#[AsInsertTag('company_id')]
+#[AsInsertTag('company_id', method: 'resolveCompanyId')]
 class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 {
-    private int|null $companyId = null;
-
     public function __construct(
         private readonly Company $company,
         private readonly Environment $twig,
@@ -33,21 +31,38 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        if (null === $insertTag->getParameters()->get(0)) {
+        return $this->resolve(null, $this->getParameters($insertTag));
+    }
+
+    public function resolveCompanyId(ResolvedInsertTag $insertTag): InsertTagResult
+    {
+        $parameters = $this->getParameters($insertTag);
+
+        return $this->resolve((int) array_shift($parameters), $parameters);
+    }
+
+    /**
+     * @return non-empty-list<string>
+     */
+    private function getParameters(ResolvedInsertTag $insertTag): array
+    {
+        $parameters = $insertTag->getParameters()->all();
+
+        if ([] === $parameters) {
             throw new InvalidInsertTagException('Missing parameters for insert tag.');
         }
 
-        $this->companyId = null;
+        return $parameters;
+    }
 
-        $parameters = $insertTag->getParameters()->all();
+    /**
+     * @param list<string> $parameters
+     */
+    private function resolve(int|null $companyId, array $parameters): InsertTagResult
+    {
+        $company = $this->company->get($companyId);
 
-        if ('company_id' === $insertTag->getName()) {
-            $this->companyId = (int) array_shift($parameters);
-        }
-
-        $company = $this->company->get($this->companyId);
-
-        if (null === $company) {
+        if (!$company instanceof CompanyModel) {
             return new InsertTagResult('');
         }
 
@@ -58,6 +73,9 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         );
     }
 
+    /**
+     * @param list<string> $parameters
+     */
     private function replaceInsertTag(CompanyModel $company, array $parameters): string
     {
         $name = $parameters[0] ?? null;
@@ -67,7 +85,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'additional' => $this->getFromSerialized($company->additional, $modifier),
             'address' => $this->renderAddress($company, $modifier),
             'fax' => $this->getFromSerialized($company->fax_numbers, $modifier),
-            'is_open' => $this->renderOpeningStatus($company),
+            'is_open' => $this->renderOpeningStatus($company, 'next' === $modifier),
             'logo' => $this->renderLogo($company, $modifier),
             'mail' => $this->getFromSerialized($company->emails, $modifier),
             'mailto' => $this->getFromSerialized($company->emails, $modifier, 'mailto'),
@@ -76,7 +94,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'social' => $this->getSocial($company->socials, $modifier),
             'tel' => $this->getFromSerialized($company->phone_numbers, $modifier, 'tel'),
             'website' => $this->getFromSerialized($company->websites, $modifier),
-            default => $company->{$name} ?? '',
+            default => null === $name ? '' : $this->toString($company->{$name}),
         };
     }
 
@@ -92,28 +110,41 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'tel', 'mailto' => $this->twig->render('@Contao/company/component/_link.html.twig', [
                 'link' => $string,
                 'href' => $string,
-                'href_prefix' => $extra . ':',
+                'href_prefix' => $extra.':',
             ]),
             default => $string,
         };
     }
 
+    /**
+     * @param array<mixed> $values
+     */
     private function getValueByAliasOrId(int|string|null $identifier, array $values): string
     {
         if (!isset($values[0]) || !\is_array($values[0])) {
             return '';
         }
 
-        if ($identifier === null) {
-            return (string) reset($values[0]);
-        } elseif (\is_numeric($identifier)) {
-            $value = $values[$identifier - 1] ?? [];
-            return (string) (count($value) === 1 ? reset($value) : $value['value'] ?? '');
+        $identifier ??= 1;
+
+        if (is_numeric($identifier)) {
+            $value = $values[(int) $identifier - 1] ?? [];
+
+            if (!\is_array($value)) {
+                return '';
+            }
+
+            return $this->toString(1 === \count($value) ? reset($value) : $value['value'] ?? '');
         }
 
         $list = array_column($values, 'value', 'key');
 
-        return $list[$identifier] ?? '';
+        return $this->toString($list[$identifier] ?? '');
+    }
+
+    private function toString(mixed $value): string
+    {
+        return \is_scalar($value) ? (string) $value : '';
     }
 
     private function getSocial(string|null $serialized, int|string|null $identifier): string
@@ -122,9 +153,13 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         $socials = StringUtil::deserialize($serialized, true);
 
         foreach ($socials as $social) {
+            if (!\is_array($social)) {
+                continue;
+            }
+
             $key = $social['social'] ?? null;
 
-            if ($key !== $identifier || !isset($options[$key])) {
+            if (!\is_string($key) || $key !== $identifier || !isset($options[$key])) {
                 continue;
             }
 
@@ -141,7 +176,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         return $this->twig->render('@Contao/company/component/_address.html.twig', [
             'company_model' => $company,
-            'include_name' => $modifier === 'name',
+            'include_name' => 'name' === $modifier,
         ]);
     }
 
@@ -149,14 +184,15 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         return $this->twig->render('@Contao/company/logo.html.twig', [
             'company_model' => $company,
-            'logo_class' => $modifier
+            'logo_class' => $modifier,
         ]);
     }
 
-    private function renderOpeningStatus(CompanyModel $company): string
+    private function renderOpeningStatus(CompanyModel $company, bool $showNextOpening): string
     {
         return $this->twig->render('@Contao/company/component/_opening_status.html.twig', [
             'opening_times' => new OpeningTimes($company),
+            'show_next_opening' => $showNextOpening,
         ]);
     }
 
@@ -167,6 +203,9 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         ]);
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getFlattenedSocialMediaOptions(): array
     {
         $event = new AddSocialMediaOptionsEvent();

@@ -7,6 +7,7 @@ services:
         public: true
         arguments:
             - '@contao.routing.page_finder'
+            - '@contao.framework'
 
     digitale_dinge_company.controller.content_element.opening_times:
         class: DigitaleDinge\CompanyBundle\Controller\ContentElement\OpeningTimesController
@@ -19,12 +20,19 @@ services:
             - '@digitale_dinge_company.company.company'
             - '@contao.routing.page_finder'
             - '@contao.filesystem.virtual.files'
+            - '@contao.insert_tag.parser'
+            - '@contao.routing.response_context_accessor'
 
     digitale_dinge_company.listener.backend_assets:
         class: DigitaleDinge\CompanyBundle\EventListener\BackendAssetsListener
         arguments:
             - '@contao.routing.scope_matcher'
             - '@assets.packages'
+
+    digitale_dinge_company.listener.data_container.country_options:
+        class: DigitaleDinge\CompanyBundle\EventListener\DataContainer\CountryOptionsListener
+        arguments:
+            - '@contao.intl.countries'
 
     digitale_dinge_company.listener.data_container.social_media_options:
         class: DigitaleDinge\CompanyBundle\EventListener\DataContainer\SocialMediaOptionsListener

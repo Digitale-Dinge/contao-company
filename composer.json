@@ -22,7 +22,7 @@
         "forum": "https://community.contao.org"
     },
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "contao/core-bundle": "^5.7 || ^6.0",
         "spatie/opening-hours": "^4.2",
         "spatie/schema-org": "^3.10 || ^4.0",

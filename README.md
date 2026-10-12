@@ -1,43 +1,70 @@
 <h1 align="center">Contao Company</h1>
+
 <p align="center">
     <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/v/digitaledinge/contao-company" alt="packagist version"/></a>
     <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/dt/digitaledinge/contao-company?color=f47c00" alt="amount of downloads"/></a>
     <a href="https://packagist.org/packages/digitaledinge/contao-company"><img src="https://img.shields.io/packagist/dependency-v/digitaledinge/contao-company/php?color=474A8A" alt="minimum php version"></a>
 </p>
 
+---
+
 ## Description
 
-Manage companies and render company information across multiple domains.
+Manage your company details in the Contao back end and assign a company to each root page. Show them with insert tags,
+the `company` Twig global or the content elements for opening times and schema.org structured data.
 
-## Setup
+Requires PHP `^8.4` and Contao `^5.7 || ^6.0`.
 
-1. **Create a company**
+---
 
-   Navigate to Content → Companies and create your company, filling in the details you want to make available across
-   your site.
++ [Getting started](#getting-started)
++ [Insert tags](#insert-tags)
++ [Content elements](#content-elements)
+    + [Opening times](#opening-times)
+    + [Closing periods](#closing-periods)
+    + [Structured data](#structured-data)
++ [Twig global](#twig-global)
++ [Events](#events)
++ [Changelog and upgrading](#changelog-and-upgrading)
 
-2. **Assign to a root page**
+---
 
-   For the company Twig global and insert tags to resolve automatically based on the current page context, assign your
-   company to the respective root page under Layout → Site Structure → Edit root page → Company.
+## Getting started
 
-3. **Use in templates, RTE or as content elements**
+1. **Install the bundle**
 
-   Company data is available in Twig via the `company` global and in text via insert tags. Additional content elements
-   for **Opening times** and schema.org exist.
+   ```bash
+   composer require digitaledinge/contao-company
+   ```
 
-4. **Optional: time zone**
+   Then update the database with `vendor/bin/contao-console contao:migrate`.
 
-   Opening times are values in the company's time zone. Leave the field empty to use the time zone from the
-   Contao system settings. Set it when a company sits in a different zone than the app.
+2. **Create a company**
 
-## Insert Tags
+   Go to Content → Companies and create your company with the details you want to show on your site.
 
-Your company information can be displayed using the following *insert tags*.
+3. **Assign it to a root page**
 
-There are two available insert tag prefixes. Use `{{company::...}}` to display the company associated with the current page context, or `{{company_id::ID::...}}` to target a specific company by its ID.
+   The Twig global and the insert tags resolve the company of the current page. Assign the company under Layout →
+   Site structure → Edit root page → Company.
 
-**Examples**
+4. **Use it**
+
+   Show company data with the [insert tags](#insert-tags), in Twig with the [`company` global](#twig-global) or with
+   the [content elements](#content-elements) for opening times and structured data.
+
+5. **Optional: time zone**
+
+   Opening times are read in the company's time zone. Leave the field empty to use the time zone from the Contao system
+   settings. Set it when the company is in a different time zone than the app.
+
+---
+
+## Insert tags
+
+`{{company::...}}` shows the company of the current page. `{{company_id::ID::...}}` targets a specific company by its
+ID.
+
 ```
 {{company::name}}
 {{company::phone}}
@@ -45,11 +72,9 @@ There are two available insert tag prefixes. Use `{{company::...}}` to display t
 {{company_id::5::phone}}
 ```
 
----
+### Company details
 
-### Company Details
-
-These insert tags return raw field values directly from the company record.
+These insert tags return the field values of the company record.
 
 | Insert tag             | Description                                         |
 |------------------------|-----------------------------------------------------|
@@ -61,13 +86,12 @@ These insert tags return raw field values directly from the company record.
 | `{{company::state}}`   | Displays the state                                  |
 | `{{company::country}}` | Displays the country                                |
 
-> Any field on the company model can be accessed this way via `{{company::FIELD_NAME}}`.
+> [!TIP]
+> Any field of the company record works this way with `{{company::FIELD_NAME}}`.
 
----
+### Phone numbers
 
-### Phone Numbers
-
-Phone numbers are stored as a list and can be accessed by their position (1-based index) as configured in the backend.
+Phone numbers are a list. Access them by their position in the back end, starting at 1.
 
 | Insert tag              | Description                                                   |
 |-------------------------|---------------------------------------------------------------|
@@ -76,18 +100,14 @@ Phone numbers are stored as a list and can be accessed by their position (1-base
 | `{{company::tel}}`      | Renders the first phone number as a `<a href="tel:...">` link |
 | `{{company::tel::2}}`   | Renders the second phone number as a `tel:` link              |
 
----
-
-### Fax Numbers
+### Fax numbers
 
 | Insert tag            | Description                    |
 |-----------------------|--------------------------------|
 | `{{company::fax}}`    | Displays the first fax number  |
 | `{{company::fax::2}}` | Displays the second fax number |
 
----
-
-### E-mail Addresses
+### E-mail addresses
 
 | Insert tag               | Description                                                        |
 |--------------------------|--------------------------------------------------------------------|
@@ -96,16 +116,12 @@ Phone numbers are stored as a list and can be accessed by their position (1-base
 | `{{company::mailto}}`    | Renders the first e-mail address as a `<a href="mailto:...">` link |
 | `{{company::mailto::2}}` | Renders the second e-mail address as a `mailto:` link              |
 
----
-
 ### Websites
 
 | Insert tag                | Description                     |
 |---------------------------|---------------------------------|
 | `{{company::website}}`    | Displays the first website URL  |
 | `{{company::website::2}}` | Displays the second website URL |
-
----
 
 ### Address
 
@@ -114,8 +130,6 @@ Phone numbers are stored as a list and can be accessed by their position (1-base
 | `{{company::address}}`       | Renders the full address block (`company/component/_address.html.twig`) |
 | `{{company::address::name}}` | Renders the full address block including the company name               |
 
----
-
 ### Logo
 
 | Insert tag                    | Description                                           |
@@ -123,39 +137,32 @@ Phone numbers are stored as a list and can be accessed by their position (1-base
 | `{{company::logo}}`           | Renders the company logo                              |
 | `{{company::logo::my-class}}` | Renders the company logo with an additional CSS class |
 
----
-
-### Social Media
+### Social media
 
 | Insert tag                      | Description                                                           |
 |---------------------------------|-----------------------------------------------------------------------|
 | `{{company::socials}}`          | Renders the full social media list (`company/social_media.html.twig`) |
 | `{{company::social::facebook}}` | Renders a link for the social media entry with the key `facebook`     |
 
----
-
-### Additional Fields
+### Additional fields
 
 | Insert tag                   | Description                                |
 |------------------------------|--------------------------------------------|
 | `{{company::additional}}`    | Displays the first additional field value  |
 | `{{company::additional::2}}` | Displays the second additional field value |
 
----
+### Opening status
 
-### Opening Status
+| Insert tag                   | Description                                                                              |
+|------------------------------|------------------------------------------------------------------------------------------|
+| `{{company::is_open}}`       | Renders the current opening status (`company/component/_opening_status.html.twig`)       |
+| `{{company::is_open::next}}` | Shows "Opens today at 14:00" instead of "Currently closed" when it opens later today     |
 
-| Insert tag             | Description                                                                            |
-|------------------------|----------------------------------------------------------------------------------------|
-| `{{company::is_open}}` | Renders the current open/closed status (`company/component/_opening_status.html.twig`) |
+The status is computed in the browser in the company's time zone and respects the closing periods.
 
-The status is computed in the browser against the company's time zone.
+### A specific company
 
----
-
-### Targeting a Specific Company by ID
-
-All of the above insert tags are also available with `company_id`, passing the company ID as the first parameter:
+Every insert tag above also works with `company_id`, with the company ID as the first parameter:
 
 ```
 {{company_id::5::name}}
@@ -168,20 +175,23 @@ All of the above insert tags are also available with `company_id`, passing the c
 {{company_id::5::is_open}}
 ```
 
-## Content Elements
+---
 
-Leave the company selection empty to use the company assigned to the current root page, or pick one explicitly.
+## Content elements
+
+Leave the company selection empty to use the company of the current root page, or pick one explicitly.
 
 ### Opening times
 
-Renders the weekly schedule as a table, the closing periods as a list, and the live open/closed status. Options:
+Renders the weekly opening times as a table, the closing periods as a list and the live opening status.
 
-| Option               | Description                                                    |
-|----------------------|----------------------------------------------------------------|
-| Company              | Explicit company, or empty for the current root page's company |
-| Abbreviated weekdays | `Mon` instead of `Monday`, localized via ICU                   |
+| Option               | Description                                                                             |
+|----------------------|-----------------------------------------------------------------------------------------|
+| Company              | A specific company, or empty for the company of the current root page                   |
+| Abbreviate weekdays  | `Mon` instead of `Monday`, localized via ICU                                            |
+| Show next opening    | "Opens today at 14:00" instead of "Currently closed" when the company opens later today |
 
-Template variants, selectable in the element's template dropdown:
+Choose a variant in the element's template dropdown:
 
 | Template                                          | Output                                                                |
 |---------------------------------------------------|-----------------------------------------------------------------------|
@@ -189,7 +199,7 @@ Template variants, selectable in the element's template dropdown:
 | `content_element/company_opening_times/open_only` | Days without opening times are left out                               |
 | `content_element/company_opening_times/grouped`   | Consecutive days with identical times collapse: `Mon–Fri 08:00–17:00` |
 
-The templates work on a [`spatie/opening-hours`](https://github.com/spatie/opening-hours) object.
+The templates work on a [spatie/opening-hours] object:
 
 ```twig
 {% for day, hours in opening_times.openingHours.forWeek %}
@@ -198,36 +208,58 @@ The templates work on a [`spatie/opening-hours`](https://github.com/spatie/openi
 {% endfor %}
 ```
 
-Overlapping ranges entered in the backend are merged, so `08:00–13:00` and `12:00–17:00` become `08:00–17:00`.
+Overlapping ranges from the back end are merged, so `08:00–13:00` and `12:00–17:00` become `08:00–17:00`.
+
+### Closing periods
+
+Each closing period has a start and end date, optional start and end times and an optional reason. Without a time, the
+whole day applies, so "Opens at 14:00 due to inventory" is a period on one day with the end time `14:00`. The reason
+supports insert tags such as `{{iflng::de}}Inventur{{iflng}}{{iflng::en}}Inventory{{iflng}}`.
+
+In the templates, `opening_times` provides:
+
+| Variable                               | Content                                                                                                                       |
+|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| `opening_times.closingTimes`           | The periods with `from`, `from_time`, `to`, `to_time` and the raw `reason`. The times are `null` when the whole day applies |
+| `opening_times.specialOpeningHours`    | The opening hours of every date a closing period changes. Dates whose hours stay the same are left out                       |
+
+The `closing_period` block renders each period and the reason with `|insert_tag`. Add attributes to the list, the
+entry and the reason with `company_closing_times_attributes`, `company_closing_period_attributes` and
+`company_closing_reason_attributes`.
 
 ### Structured data
 
-Adds a schema.org `LocalBusiness` or `Organization` node to the page's JSON-LD and renders nothing visible. Options:
+Adds a schema.org `LocalBusiness` or `Organization` node to the page's JSON-LD and renders nothing visible.
 
-| Option  | Description                                                                                          |
-|---------|------------------------------------------------------------------------------------------------------|
-| Company | Explicit company, or empty for the current root page's company                                       |
-| Type    | `LocalBusiness` (default) or `Organization`                                                          |
-| URL     | Used as `url` and `@id`. Empty uses the absolute URL of the current root page                        |
+| Option  | Description                                                                   |
+|---------|-------------------------------------------------------------------------------|
+| Company | A specific company, or empty for the company of the current root page         |
+| Type    | `LocalBusiness` (default) or `Organization`                                   |
+| URL     | Used as `url` and `@id`. Empty uses the absolute URL of the current root page |
 
-Mapped fields: `name`, `url`, `@id`, `logo`, `address` as `PostalAddress`, first `telephone`, first `faxNumber`, first
-`email`, `vatID`, all socials as `sameAs`.
-Opening hours (`openingHoursSpecification`) and closing periods
-(`specialOpeningHoursSpecification`, closed days as `00:00`–`00:00`) are added for `LocalBusiness` only, since they are
-not `Organization` properties. Multiple elements for the same company on one page merge into one schema org node.
+The node contains `name`, `url`, `@id`, `logo`, `address` as `PostalAddress`, the first `telephone`, the first
+`faxNumber`, the first `email`, `vatID` and all social media links as `sameAs`.
 
-## Twig Global
+A `LocalBusiness` also gets the opening hours as `openingHoursSpecification` and the closing periods as
+`specialOpeningHoursSpecification`, as long as the company has any. `Organization` has no such properties. Closing
+periods are written per affected date with the opening hours that remain on that day. Fully closed days become
+`00:00`–`00:00`, and the reason becomes the `description`.
 
-The `company` variable is available globally in all Twig templates. It provides access to the company associated with
-the current page context, or to a specific company by ID.
+Several elements for the same company on one page merge into one node.
 
-### Get the company model
+---
 
-In some cases you want to access one value like `company.name`. If you want to use more values of the company, you can
-get the full company model by using `company.get` and access the values directly.
+## Twig global
+
+The `company` variable is available in every Twig template. It returns the company of the current page or a specific
+company by ID.
+
+### The company model
+
+`company.name` is enough for a single value. To use several values, get the model with `company.get`:
 
 ```twig
-{# Current page context #}
+{# Current page #}
 {% set company_model = company.get %}
 
 {# Specific company by ID #}
@@ -236,11 +268,7 @@ get the full company model by using `company.get` and access the values directly
 
 ### Simple fields
 
-Simple fields are accessed directly as properties on the model:
-
 ```twig
-{% set company_model = company.get %}
-
 {{ company_model.name }}
 {{ company_model.street }}
 {{ company_model.postal }}
@@ -250,14 +278,11 @@ Simple fields are accessed directly as properties on the model:
 {{ company_model.logo }}
 ```
 
-### Serialized lists
+### Lists
 
-The following properties return serialized strings on the model and must be deserialized first.
-When accessing lists directly via the `company` global, deserialization is handled automatically.
+The lists are serialized strings on the model, so deserialize them first:
 
 ```twig
-{% set company_model = company.get %}
-
 {% for row in company_model.emails|deserialize|default([]) %}
     {{ row.email }}
 {% endfor %}
@@ -285,7 +310,7 @@ When accessing lists directly via the `company` global, deserialization is handl
 {% endfor %}
 ```
 
-Alternatively, the `company` global exposes these directly as pre-deserialized arrays — without needing a model instance:
+The `company` global returns them already deserialized for the company of the current page:
 
 ```twig
 {% set emails = company.emails %}
@@ -296,29 +321,21 @@ Alternatively, the `company` global exposes these directly as pre-deserialized a
 {% set additional = company.additional %}
 ```
 
-For a specific company by ID, get the model first and then deserialize:
+### List entries
+
+Lists start at index `0`. Index access works directly on the `company.*` lists. Deserialize `company_model.*` first.
 
 ```twig
-{% set company_model = company.get(5) %}
-{% set emails = company_model.emails|deserialize %}
-{% set socials = company_model.socials|deserialize %}
-```
-
-### Accessing entries of a list
-
-Lists are arrays, so the first item is at index `0`, the second at `1`, and so on. Note that direct index access works on the pre-deserialized `company.*` properties. When using `company_model.*`, deserialize first.
-
-```twig
-{# Via company global (already deserialized) #}
+{# company global, already deserialized #}
 {% set first_email = company.emails[0].email ?? null %}
 {% set third_email = company.emails[2].email ?? null %}
 
-{# Via company model (deserialize first) #}
+{# company model, deserialize first #}
 {% set first_email = company_model.emails|deserialize[0].email ?? null %}
 {% set third_email = company_model.emails|deserialize[2].email ?? null %}
 ```
 
-Alternatively, use the `|first` Twig filter as a shorthand for the first entry:
+`|first` is a shorthand for the first entry:
 
 ```twig
 {% set first_email = company.emails|first?.email ?? null %}
@@ -327,7 +344,7 @@ Alternatively, use the `|first` Twig filter as a shorthand for the first entry:
 
 ### Social media
 
-Each social media entry exposes `social` (platform label) and `url`.
+Each social media entry has `social` (the platform label) and `url`:
 
 ```twig
 {% for row in company.socials %}
@@ -340,13 +357,14 @@ Each social media entry exposes `social` (platform label) and `url`.
 {% endfor %}
 ```
 
+---
+
 ## Events
 
 ### `AddSocialMediaOptionsEvent`
 
-This event is dispatched whenever the social media options are built — both in the backend select field and when resolving insert tags. It allows you to replace the default social media options with your own.
-
-The following platforms are available by default:
+Dispatched whenever the social media options are built, in the back end select field and when insert tags are
+resolved. Use it to replace the default platforms with your own.
 
 | Group       | Platforms                                              |
 |-------------|--------------------------------------------------------|
@@ -355,7 +373,7 @@ The following platforms are available by default:
 | Creative    | Pinterest, Behance, Reddit                             |
 | Development | GitHub, GitLab                                         |
 
-To add or replace platforms, create an event listener and call `setSocialMedia()` with your own grouped array:
+Call `setSocialMedia()` with your own grouped array:
 
 ```php
 <?php
@@ -374,7 +392,7 @@ class CustomSocialMediaListener
     {
         $event->setSocialMedia([
             'General' => [
-                'facebook'  => 'Facebook',
+                'facebook' => 'Facebook',
                 'instagram' => 'Instagram',
             ],
             'Custom' => [
@@ -385,18 +403,28 @@ class CustomSocialMediaListener
 }
 ```
 
-> Note that calling `setSocialMedia()` replaces all defaults. If you want to keep the existing platforms, retrieve them
-> first via `getSocialMedia()` and merge your additions in.
+> [!NOTE]
+> `setSocialMedia()` replaces all defaults. To keep them, merge your additions into `getSocialMedia()`:
 
 ```php
 public function __invoke(AddSocialMediaOptionsEvent $event): void
 {
-    $existing = $event->getSocialMedia();
-
-    $event->setSocialMedia(array_merge($existing, [
+    $event->setSocialMedia([
+        ...$event->getSocialMedia(),
         'Custom' => [
             'myplatform' => 'My Platform',
         ],
-    ]));
+    ]);
 }
 ```
+
+---
+
+## Changelog and upgrading
+
+| Document                   | Content                                         |
+|----------------------------|-------------------------------------------------|
+| [Changelog](CHANGELOG.md)  | What changed in each version                    |
+| [Upgrade](UPGRADE.md)      | What a project has to do when it updates        |
+
+[spatie/opening-hours]: https://github.com/spatie/opening-hours

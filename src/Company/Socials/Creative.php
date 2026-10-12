@@ -7,6 +7,6 @@ namespace DigitaleDinge\CompanyBundle\Company\Socials;
 enum Creative: string
 {
     case pinterest = 'Pinterest';
-    case behance   = 'Behance';
-    case reddit    = 'Reddit';
+    case behance = 'Behance';
+    case reddit = 'Reddit';
 }

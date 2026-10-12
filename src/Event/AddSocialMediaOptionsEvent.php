@@ -9,18 +9,30 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class AddSocialMediaOptionsEvent extends Event
 {
+    /**
+     * @var array<string, array<string, string>>
+     */
     private array $socials = [];
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     public function getSocialMedia(): array
     {
-        return empty($this->socials) ? $this->getDefaults() : $this->socials;
+        return [] === $this->socials ? $this->getDefaults() : $this->socials;
     }
 
+    /**
+     * @param array<string, array<string, string>> $socials
+     */
     public function setSocialMedia(array $socials): void
     {
         $this->socials = $socials;
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     private function getDefaults(): array
     {
         return [
@@ -31,8 +43,19 @@ class AddSocialMediaOptionsEvent extends Event
         ];
     }
 
-    private function enumToArray($enum): array
+    /**
+     * @param list<\BackedEnum> $cases
+     *
+     * @return array<string, string>
+     */
+    private function enumToArray(array $cases): array
     {
-        return array_column($enum, 'value', 'name');
+        $options = [];
+
+        foreach ($cases as $case) {
+            $options[$case->name] = (string) $case->value;
+        }
+
+        return $options;
     }
 }

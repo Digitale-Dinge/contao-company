@@ -1,4 +1,4 @@
-{% extends "@Contao/content_element/company_opening_times.html.twig" %}
+{% extends '@Contao/content_element/company_opening_times.html.twig' %}
 
 {% block day_rows %}
     {% for day, hours in opening_times.openingHours.forWeek|filter(hours => hours|length > 0) %}

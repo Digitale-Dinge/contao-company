@@ -9,6 +9,10 @@ tl_content:
         - Abbreviate weekdays
         - Shows "Mon" instead of "Monday".
 
+    company_next_opening:
+        - Show next opening
+        - Shows "Opens today at 14:00" instead of "Currently closed" when the company opens later today.
+
     company_schema_type:
         - Type
         - Opening hours are only part of a LocalBusiness, see https://schema.org/LocalBusiness

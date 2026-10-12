@@ -6,10 +6,10 @@ namespace DigitaleDinge\CompanyBundle\Company\Socials;
 
 enum General: string
 {
-    case facebook  = 'Facebook';
+    case facebook = 'Facebook';
     case instagram = 'Instagram';
-    case linkedin  = 'LinkedIn';
-    case xing      = 'Xing';
-    case threads   = 'Threads';
-    case mastodon  = 'Mastodon';
+    case linkedin = 'LinkedIn';
+    case xing = 'Xing';
+    case threads = 'Threads';
+    case mastodon = 'Mastodon';
 }

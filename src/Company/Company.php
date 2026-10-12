@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace DigitaleDinge\CompanyBundle\Company;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\PageModel;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 
 class Company
 {
+    /**
+     * @var array<int, CompanyModel|null>
+     */
     private array $cache = [];
 
     public function __construct(
-        readonly private PageFinder $pageFinder,
+        private readonly PageFinder $pageFinder,
+        private readonly ContaoFramework $framework,
     ) {
     }
 
@@ -32,17 +37,27 @@ class Company
             return null;
         }
 
-        return $this->cache[$id] ??= CompanyModel::findById($id);
+        $this->framework->initialize();
+
+        if (isset($this->cache[$id])) {
+            return $this->cache[$id];
+        }
+
+        $companyModel = $this->framework->getAdapter(CompanyModel::class)->findById($id);
+
+        return $this->cache[$id] = $companyModel instanceof CompanyModel ? $companyModel : null;
     }
 
     public function getForCurrentPage(): CompanyModel|null
     {
-        if (!$page = $this->pageFinder->getCurrentPage()) {
+        if (!($page = $this->pageFinder->getCurrentPage()) instanceof PageModel) {
             return null;
         }
 
-        $rootPage = PageModel::findById($page->loadDetails()->rootId);
+        $rootPage = $this->framework->getAdapter(PageModel::class)->findById($page->loadDetails()->rootId);
 
-        return $this->getForId((int) ($rootPage?->dd_company ?? 0));
+        $companyId = $rootPage?->dd_company;
+
+        return $this->getForId(is_numeric($companyId) ? (int) $companyId : 0);
     }
 }

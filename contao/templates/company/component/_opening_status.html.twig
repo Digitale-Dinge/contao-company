@@ -7,6 +7,7 @@
             labels: {
                 open: 'company.opening_times.open_until'|trans({}, 'company'),
                 closed: 'company.opening_times.closed'|trans({}, 'company'),
+                opens: show_next_opening|default ? 'company.opening_times.opens_at'|trans({}, 'company') : null,
             },
         })|json_encode)
         .set('hidden')
@@ -19,7 +20,7 @@
     {% endadd %}
 
     {% add 'company_opening_times_css' to stylesheets %}
-        {% with { file: asset('opening-times.css', 'digitale_dinge_company') } %}
+        {% with {file: asset('opening-times.css', 'digitale_dinge_company')} %}
             {{ block('stylesheet_component') }}
         {% endwith %}
     {% endadd %}

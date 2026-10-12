@@ -66,9 +66,12 @@ tl_company:
 
     closing_times:
         - Schließzeiten
-        - Hier können Sie Daten von - bis eingeben, zu welchen das Unternehmen geschlossen ist.
+        - Hier können Sie Zeiträume eingeben, in denen das Unternehmen geschlossen ist. Ohne Uhrzeit gilt der ganze Tag. Die Begründung unterstützt Insert-Tags, z. B. iflng für mehrsprachige Seiten.
         - Datum von
+        - Uhrzeit von
         - Datum bis
+        - Uhrzeit bis
+        - Begründung
 
     socials:
         - Social-Media
