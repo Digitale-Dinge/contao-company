@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             '{address_legal_legend},street,postal,city,state,country,vat;' .
             '{contact_legend},emails,websites,phone_numbers,fax_numbers;' .
             '{times_legend},timezone,opening_times,closing_times;' .
-            '{misc_legend:hide},socials,additional;',
+            '{misc_legend:collapsed},socials,additional;',
     ],
     'fields' => [
         'id' => [

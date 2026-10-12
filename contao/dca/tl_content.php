@@ -7,15 +7,15 @@ use Doctrine\DBAL\Types\Types;
 $GLOBALS['TL_DCA']['tl_content']['palettes']['company_opening_times'] =
     '{type_legend},type,headline;' .
     '{company_legend},company,company_short_days,company_next_opening;' .
-    '{template_legend:hide},customTpl;' .
-    '{expert_legend:hide},cssID;' .
-    '{invisible_legend:hide},invisible,start,stop;'
+    '{template_legend:collapsed},customTpl;' .
+    '{expert_legend:collapsed},cssID;' .
+    '{invisible_legend:collapsed},invisible,start,stop;'
 ;
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['company_schema'] =
     '{type_legend},type;' .
     '{company_legend},company,company_schema_type,company_schema_url;' .
-    '{invisible_legend:hide},invisible,start,stop;'
+    '{invisible_legend:collapsed},invisible,start,stop;'
 ;
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['company'] = [
