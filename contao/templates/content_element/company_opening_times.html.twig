@@ -38,15 +38,41 @@
     </table>
 {% endblock %}
 
+{% block closing_period %}
+    {% set company_closing_period_attributes = attrs(company_closing_period_attributes|default) %}
+    {% set company_closing_reason_attributes = attrs(company_closing_reason_attributes|default)
+        .addClass('company_closing-times__reason')
+    %}
+    {% set same_day = period.to == period.from %}
+    {% set reason = period.reason|insert_tag|trim %}
+
+    <li{{ company_closing_period_attributes }}>
+        <time datetime="{{ period.from }}{{ period.from_time ? 'T' ~ period.from_time }}">
+            {{- period.from|format_date -}}
+            {{- period.from_time ? ', ' ~ 'company.opening_times.from_time'|trans({'%time%': period.from_time}, 'company') -}}
+        </time>
+        {%- if not same_day or period.to_time -%}
+            {{ same_day ? ', ' : ' – ' -}}
+            <time datetime="{{ period.to }}{{ period.to_time ? 'T' ~ period.to_time }}">
+                {{- not same_day ? period.to|format_date -}}
+                {{- not same_day and period.to_time ? ', ' -}}
+                {{- period.to_time ? 'company.opening_times.until_time'|trans({'%time%': period.to_time}, 'company') -}}
+            </time>
+        {%- endif -%}
+        {%- if reason %}: <span{{ company_closing_reason_attributes }}>{{ reason }}</span>{% endif %}
+    </li>
+{% endblock %}
+
 {% block company_closing_times %}
+    {% set company_closing_times_attributes = attrs(company_closing_times_attributes|default)
+        .addClass('company_closing-times')
+    %}
+
     {% if opening_times.closingTimes is not empty %}
         <p class="company_closing-times__headline">{{ 'company.opening_times.closing_times'|trans({}, 'company') }}</p>
-        <ul class="company_closing-times">
+        <ul{{ company_closing_times_attributes }}>
             {% for period in opening_times.closingTimes %}
-                <li>
-                    <time datetime="{{ period.from }}">{{ period.from|format_date }}</time>
-                    {%- if period.to != period.from %} – <time datetime="{{ period.to }}">{{ period.to|format_date }}</time>{% endif %}
-                </li>
+                {{ block('closing_period') }}
             {% endfor %}
         </ul>
     {% endif %}

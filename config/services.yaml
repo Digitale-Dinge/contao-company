@@ -19,6 +19,7 @@ services:
             - '@digitale_dinge_company.company.company'
             - '@contao.routing.page_finder'
             - '@contao.filesystem.virtual.files'
+            - '@contao.insert_tag.parser'
 
     digitale_dinge_company.listener.backend_assets:
         class: DigitaleDinge\CompanyBundle\EventListener\BackendAssetsListener

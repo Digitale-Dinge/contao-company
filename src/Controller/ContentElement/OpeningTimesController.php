@@ -28,6 +28,7 @@ class OpeningTimesController extends AbstractContentElementController
         $template->set('company_model', $companyModel);
         $template->set('opening_times', new OpeningTimes($companyModel));
         $template->set('short_days', (bool) $model->company_short_days);
+        $template->set('show_next_opening', (bool) $model->company_next_opening);
 
         $this->tagResponse($companyModel);
 

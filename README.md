@@ -147,9 +147,10 @@ Phone numbers are stored as a list and can be accessed by their position (1-base
 
 | Insert tag             | Description                                                                            |
 |------------------------|----------------------------------------------------------------------------------------|
-| `{{company::is_open}}` | Renders the current open/closed status (`company/component/_opening_status.html.twig`) |
+| `{{company::is_open}}`       | Renders the current open/closed status (`company/component/_opening_status.html.twig`) |
+| `{{company::is_open::next}}` | Same, but shows "Opens today at 14:00" instead of "Currently closed" when it opens later today |
 
-The status is computed in the browser against the company's time zone.
+The status is computed in the browser against the company's time zone and respects closing periods.
 
 ---
 
@@ -180,6 +181,7 @@ Renders the weekly schedule as a table, the closing periods as a list, and the l
 |----------------------|----------------------------------------------------------------|
 | Company              | Explicit company, or empty for the current root page's company |
 | Abbreviated weekdays | `Mon` instead of `Monday`, localized via ICU                   |
+| Show next opening    | "Opens today at 14:00" instead of "Currently closed" when the company opens later today |
 
 Template variants, selectable in the element's template dropdown:
 
@@ -200,6 +202,18 @@ The templates work on a [`spatie/opening-hours`](https://github.com/spatie/openi
 
 Overlapping ranges entered in the backend are merged, so `08:00–13:00` and `12:00–17:00` become `08:00–17:00`.
 
+### Closing periods
+
+Each closing period has a start and end date, optional start and end times and an optional reason. Without a time, the
+whole day applies, so "Opens at 14:00 due to inventory" is a period on one day with the end time `14:00`. The reason
+supports insert tags such as `{{iflng::de}}Inventur{{iflng}}{{iflng::en}}Inventory{{iflng}}`.
+
+`opening_times.closingTimes` returns the periods with `from`, `from_time`, `to`, `to_time` (times are `null` for the
+whole day) and the raw `reason`, which the template renders with `|insert_tag`. Each period is rendered by the
+`closing_period` block; `company_closing_times_attributes`, `company_closing_period_attributes` and
+`company_closing_reason_attributes` add attributes to the list, the entry and the reason. `opening_times.specialOpeningHours` returns the resulting opening hours per affected date,
+i.e. the weekly hours minus the closing periods. Dates whose hours do not change are left out.
+
 ### Structured data
 
 Adds a schema.org `LocalBusiness` or `Organization` node to the page's JSON-LD and renders nothing visible. Options:
@@ -212,9 +226,9 @@ Adds a schema.org `LocalBusiness` or `Organization` node to the page's JSON-LD a
 
 Mapped fields: `name`, `url`, `@id`, `logo`, `address` as `PostalAddress`, first `telephone`, first `faxNumber`, first
 `email`, `vatID`, all socials as `sameAs`.
-Opening hours (`openingHoursSpecification`) and closing periods
-(`specialOpeningHoursSpecification`, closed days as `00:00`–`00:00`) are added for `LocalBusiness` only, since they are
-not `Organization` properties. Multiple elements for the same company on one page merge into one schema org node.
+Opening hours (`openingHoursSpecification`) and closing periods (`specialOpeningHoursSpecification`) are added for
+`LocalBusiness` only, since they are not `Organization` properties. Closing periods are written per affected date with
+the remaining opening hours of that day, fully closed days as `00:00`–`00:00`, and the reason as `description`. Multiple elements for the same company on one page merge into one schema org node.
 
 ## Twig Global
 

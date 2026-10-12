@@ -67,7 +67,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'additional' => $this->getFromSerialized($company->additional, $modifier),
             'address' => $this->renderAddress($company, $modifier),
             'fax' => $this->getFromSerialized($company->fax_numbers, $modifier),
-            'is_open' => $this->renderOpeningStatus($company),
+            'is_open' => $this->renderOpeningStatus($company, 'next' === $modifier),
             'logo' => $this->renderLogo($company, $modifier),
             'mail' => $this->getFromSerialized($company->emails, $modifier),
             'mailto' => $this->getFromSerialized($company->emails, $modifier, 'mailto'),
@@ -153,10 +153,11 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         ]);
     }
 
-    private function renderOpeningStatus(CompanyModel $company): string
+    private function renderOpeningStatus(CompanyModel $company, bool $showNextOpening): string
     {
         return $this->twig->render('@Contao/company/component/_opening_status.html.twig', [
             'opening_times' => new OpeningTimes($company),
+            'show_next_opening' => $showNextOpening,
         ]);
     }
 

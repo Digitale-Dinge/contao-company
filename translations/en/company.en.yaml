@@ -7,6 +7,9 @@ company:
     opening_times:
         open_until:     "Open today until %time%"
         closed:         Currently closed
+        opens_at:       "Opens today at %time%"
+        from_time:      "from %time%"
+        until_time:     "until %time%"
         closed_all_day: Closed
         closing_times:  Closing times
         table_caption:  Opening times by weekday

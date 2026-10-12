@@ -66,9 +66,12 @@ tl_company:
 
     closing_times:
         - Closing times
-        - Here you can enter date ranges during which the company is closed.
+        - Here you can enter periods during which the company is closed. Without a time, the whole day applies. The reason supports insert tags, e.g. iflng for multilingual sites.
         - Date from
+        - Time from
         - Date until
+        - Time until
+        - Reason
 
     socials:
         - Social media

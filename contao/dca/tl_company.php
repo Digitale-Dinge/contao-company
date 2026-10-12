@@ -223,14 +223,32 @@ $GLOBALS['TL_DCA']['tl_company'] = [
             'fields' => [
                 'start' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][2],
-                    'inputType' => 'date',
+                    'inputType' => 'company_date',
+                ],
+                'start_time' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][3],
+                    'inputType' => 'company_date',
+                    'eval' => ['time' => true],
                 ],
                 'stop' => [
-                    'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][3],
-                    'inputType' => 'date',
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][4],
+                    'inputType' => 'company_date',
+                ],
+                'stop_time' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][5],
+                    'inputType' => 'company_date',
+                    'eval' => ['time' => true],
+                ],
+                'reason' => [
+                    'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][6],
+                    'inputType' => 'text',
+                    'eval' => [
+                        'maxlength' => 255,
+                        'decodeEntities' => true,
+                    ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50', 'sortable' => false],
+            'eval' => ['tl_class' => 'clr', 'sortable' => false],
             'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
         ],
         'additional' => [

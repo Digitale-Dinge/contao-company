@@ -6,7 +6,7 @@ use Doctrine\DBAL\Types\Types;
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['company_opening_times'] =
     '{type_legend},type,headline;' .
-    '{company_legend},company,company_short_days;' .
+    '{company_legend},company,company_short_days,company_next_opening;' .
     '{template_legend:hide},customTpl;' .
     '{expert_legend:hide},cssID;' .
     '{invisible_legend:hide},invisible,start,stop;'
@@ -31,7 +31,12 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['company_short_days'] = [
     'inputType' => 'checkbox',
     'exclude' => true,
     'eval' => ['tl_class' => 'w50 m12'],
-    'sql' => ['type' => Types::BOOLEAN, 'default' => false],
+];
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['company_next_opening'] = [
+    'inputType' => 'checkbox',
+    'exclude' => true,
+    'eval' => ['tl_class' => 'w50 m12'],
 ];
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['company_schema_type'] = [

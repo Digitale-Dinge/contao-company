@@ -35,20 +35,37 @@ export class OpeningStatus {
 
         const config = JSON.parse(element.dataset.companyOpeningTimes);
         const now = this.#now(config.timezone);
-        const interval = this.#currentInterval(config, now);
+        const openingTimesRanges = this.#openingTimesRangesForToday(config, now);
+        const currentOpeningTimesRange = this.#currentOpeningTimesRange(openingTimesRanges, now);
 
-        element.textContent = interval
-            ? config.labels.open.replace(this.options.placeholder, interval.closes)
-            : config.labels.closed;
-
-        element.classList.toggle(this.options.openClass, !!interval);
-        element.classList.toggle(this.options.closedClass, !interval);
-
+        element.textContent = this.#openingStatusText(config.labels, openingTimesRanges, currentOpeningTimesRange, now);
+        element.classList.toggle(this.options.openClass, !!currentOpeningTimesRange);
+        element.classList.toggle(this.options.closedClass, !currentOpeningTimesRange);
         element.hidden = false;
+
+        this.#scheduleNextRender(element, now, this.#nextStatusChange(openingTimesRanges, now));
+    }
+
+    #openingStatusText(labels, openingTimesRanges, currentOpeningTimesRange, now) {
+        if (currentOpeningTimesRange) {
+            return this.#formatLabel(labels.open, currentOpeningTimesRange.closes);
+        }
+
+        const nextOpeningTimesRange = labels.opens && this.#nextOpeningTimesRange(openingTimesRanges, now);
+
+        return nextOpeningTimesRange ? this.#formatLabel(labels.opens, nextOpeningTimesRange.opens) : labels.closed;
+    }
+
+    #formatLabel(label, time) {
+        return label.replace(this.options.placeholder, time);
+    }
+
+    #scheduleNextRender(element, now, nextStatusChange) {
+        const delay = (nextStatusChange * 60 - now.minutes * 60 - now.seconds) * 1000 + 1000;
 
         this.timers.set(
             element,
-            setTimeout(() => this.#render(element), this.#calculateNextChange(config, now)),
+            setTimeout(() => this.#render(element), delay),
         );
     }
 
@@ -65,27 +82,26 @@ export class OpeningStatus {
         return Number(hours) * 60 + Number(minutes);
     }
 
-    #currentInterval(config, now) {
-        if (config.closingTimes.some((period) => now.date >= period.from && now.date <= period.to)) {
-            return null;
-        }
+    #openingTimesRangesForToday(config, now) {
+        return config.specialOpeningHours?.[now.date] ?? config.days[now.day] ?? [];
+    }
 
-        return (
-            (config.days[now.day] || []).find(
-                (interval) =>
-                    now.minutes >= this.#toMinutes(interval.opens) && now.minutes < this.#toMinutes(interval.closes),
-            ) || null
+    #currentOpeningTimesRange(openingTimesRanges, now) {
+        return openingTimesRanges.find(
+            (range) => now.minutes >= this.#toMinutes(range.opens) && now.minutes < this.#toMinutes(range.closes),
         );
     }
 
-    #calculateNextChange(config, now) {
-        const boundaries = (config.days[now.day] || []).flatMap((interval) => [
-            this.#toMinutes(interval.opens),
-            this.#toMinutes(interval.closes),
+    #nextOpeningTimesRange(openingTimesRanges, now) {
+        return openingTimesRanges.find((range) => this.#toMinutes(range.opens) > now.minutes);
+    }
+
+    #nextStatusChange(openingTimesRanges, now) {
+        const boundaries = openingTimesRanges.flatMap((range) => [
+            this.#toMinutes(range.opens),
+            this.#toMinutes(range.closes),
         ]);
 
-        const next = Math.min(...boundaries.filter((minute) => minute > now.minutes), 1440);
-
-        return (next * 60 - now.minutes * 60 - now.seconds) * 1000 + 1000;
+        return Math.min(...boundaries.filter((minute) => minute > now.minutes), 1440);
     }
 }

@@ -8,6 +8,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -32,6 +33,7 @@ class CompanySchemaController extends AbstractContentElementController
         readonly private Company $company,
         readonly private PageFinder $pageFinder,
         readonly private VirtualFilesystemInterface $filesStorage,
+        readonly private InsertTagParser $insertTagParser,
     ) {
     }
 
@@ -76,7 +78,7 @@ class CompanySchemaController extends AbstractContentElementController
             ->addressCountry(strtoupper((string) $company->country))
         ;
 
-        $openingTimes = new OpeningTimes($company);
+        $openingTimes = new OpeningTimes($company, $this->insertTagParser);
         $schema = 'Organization' === $type ? Schema::organization() : Schema::localBusiness();
 
         return $schema
