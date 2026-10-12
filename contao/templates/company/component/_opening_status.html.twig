@@ -20,7 +20,7 @@
     {% endadd %}
 
     {% add 'company_opening_times_css' to stylesheets %}
-        {% with { file: asset('opening-times.css', 'digitale_dinge_company') } %}
+        {% with {file: asset('opening-times.css', 'digitale_dinge_company')} %}
             {{ block('stylesheet_component') }}
         {% endwith %}
     {% endadd %}
