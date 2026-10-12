@@ -21,11 +21,9 @@ use Zoglo\RteInsertTagsBundle\DependencyInjection\Attribute\AsRteInsertTag;
 use Zoglo\RteInsertTagsBundle\DependencyInjection\Attribute\Parameter\Choice;
 
 #[AsInsertTag('company')]
-#[AsInsertTag('company_id')]
+#[AsInsertTag('company_id', method: 'resolveCompanyId')]
 class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 {
-    private int|null $companyId = null;
-
     public function __construct(
         private readonly Company $company,
         private readonly Environment $twig,
@@ -35,19 +33,36 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        if (null === $insertTag->getParameters()->get(0)) {
+        return $this->resolve(null, $this->getParameters($insertTag));
+    }
+
+    public function resolveCompanyId(ResolvedInsertTag $insertTag): InsertTagResult
+    {
+        $parameters = $this->getParameters($insertTag);
+
+        return $this->resolve((int) array_shift($parameters), $parameters);
+    }
+
+    /**
+     * @return non-empty-list<string>
+     */
+    private function getParameters(ResolvedInsertTag $insertTag): array
+    {
+        $parameters = $insertTag->getParameters()->all();
+
+        if ([] === $parameters) {
             throw new InvalidInsertTagException('Missing parameters for insert tag.');
         }
 
-        $this->companyId = null;
+        return $parameters;
+    }
 
-        $parameters = $insertTag->getParameters()->all();
-
-        if ('company_id' === $insertTag->getName()) {
-            $this->companyId = (int) array_shift($parameters);
-        }
-
-        $company = $this->company->get($this->companyId);
+    /**
+     * @param list<string> $parameters
+     */
+    private function resolve(int|null $companyId, array $parameters): InsertTagResult
+    {
+        $company = $this->company->get($companyId);
 
         if (null === $company) {
             return new InsertTagResult('');
