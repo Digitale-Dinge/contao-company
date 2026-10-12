@@ -227,7 +227,7 @@ Adds a schema.org `LocalBusiness` or `Organization` node to the page's JSON-LD a
 Mapped fields: `name`, `url`, `@id`, `logo`, `address` as `PostalAddress`, first `telephone`, first `faxNumber`, first
 `email`, `vatID`, all socials as `sameAs`.
 Opening hours (`openingHoursSpecification`) and closing periods (`specialOpeningHoursSpecification`) are added for
-`LocalBusiness` only, since they are not `Organization` properties. Closing periods are written per affected date with
+`LocalBusiness` only, since they are not `Organization` properties, and only when the company has any. Closing periods are written per affected date with
 the remaining opening hours of that day, fully closed days as `00:00`–`00:00`, and the reason as `description`. Multiple elements for the same company on one page merge into one schema org node.
 
 ## Twig Global

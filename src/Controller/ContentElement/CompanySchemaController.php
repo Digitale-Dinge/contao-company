@@ -93,8 +93,8 @@ class CompanySchemaController extends AbstractContentElementController
             ->sameAs($this->getColumn($company->socials, 'url') ?: null)
             ->if([] !== $address->getProperties(), static fn (LocalBusiness|Organization $schema) => $schema->address($address))
             ->if($schema instanceof LocalBusiness, static fn (LocalBusiness $schema) => $schema
-                ->openingHoursSpecification($openingTimes->getSchemaSpecification())
-                ->specialOpeningHoursSpecification($openingTimes->getSchemaSpecialSpecification()),
+                ->openingHoursSpecification($openingTimes->getSchemaSpecification() ?: null)
+                ->specialOpeningHoursSpecification($openingTimes->getSchemaSpecialSpecification() ?: null),
             )
         ;
     }
