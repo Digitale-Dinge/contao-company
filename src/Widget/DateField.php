@@ -11,7 +11,8 @@ class DateField extends TextField
 {
     public function generate(): string
     {
-        return System::getContainer()->get('twig')->render('@Contao/backend/widget/date.html.twig', [
+        return System::getContainer()->get('twig')->render('@Contao/backend/widget/company_date.html.twig', [
+            'type' => $this->time ? 'time' : 'date',
             'id' => $this->strId,
             'name' => $this->strName,
             'value' => $this->varValue,
