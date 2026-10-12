@@ -17,6 +17,8 @@ use DigitaleDinge\CompanyBundle\Event\AddSocialMediaOptionsEvent;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
+use Zoglo\RteInsertTagsBundle\DependencyInjection\Attribute\AsRteInsertTag;
+use Zoglo\RteInsertTagsBundle\DependencyInjection\Attribute\Parameter\Choice;
 
 #[AsInsertTag('company')]
 #[AsInsertTag('company_id')]
@@ -104,9 +106,9 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             return '';
         }
 
-        if ($identifier === null) {
-            return (string) reset($values[0]);
-        } elseif (\is_numeric($identifier)) {
+        $identifier ??= 1;
+
+        if (\is_numeric($identifier)) {
             $value = $values[$identifier - 1] ?? [];
             return (string) (count($value) === 1 ? reset($value) : $value['value'] ?? '');
         }
