@@ -10,9 +10,8 @@ use Twig\Extension\GlobalsInterface;
 
 class CompanyExtension extends AbstractExtension implements GlobalsInterface
 {
-    public function __construct(
-        private readonly CompanyVariable $companyVariable,
-    ) {
+    public function __construct(private readonly CompanyVariable $companyVariable)
+    {
     }
 
     public function getGlobals(): array

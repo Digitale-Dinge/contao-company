@@ -13,7 +13,7 @@ class AddSocialMediaOptionsEvent extends Event
 
     public function getSocialMedia(): array
     {
-        return empty($this->socials) ? $this->getDefaults() : $this->socials;
+        return [] === $this->socials ? $this->getDefaults() : $this->socials;
     }
 
     public function setSocialMedia(array $socials): void
@@ -31,7 +31,7 @@ class AddSocialMediaOptionsEvent extends Event
         ];
     }
 
-    private function enumToArray($enum): array
+    private function enumToArray(array $enum): array
     {
         return array_column($enum, 'value', 'name');
     }

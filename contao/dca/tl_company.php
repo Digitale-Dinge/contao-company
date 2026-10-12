@@ -34,19 +34,26 @@ $GLOBALS['TL_DCA']['tl_company'] = [
         ],
     ],
     'palettes' => [
-        'default' =>
-            '{general_legend},name,logo;' .
-            '{address_legal_legend},street,postal,city,state,country,vat;' .
-            '{contact_legend},emails,websites,phone_numbers,fax_numbers;' .
-            '{times_legend},timezone,opening_times,closing_times;' .
+        'default' => '{general_legend},name,logo;'.
+            '{address_legal_legend},street,postal,city,state,country,vat;'.
+            '{contact_legend},emails,websites,phone_numbers,fax_numbers;'.
+            '{times_legend},timezone,opening_times,closing_times;'.
             '{misc_legend:collapsed},socials,additional;',
     ],
     'fields' => [
         'id' => [
-            'sql' => ['type' => Types::INTEGER, 'unsigned' => true, 'autoincrement' => true],
+            'sql' => [
+                'type' => Types::INTEGER,
+                'unsigned' => true,
+                'autoincrement' => true,
+            ],
         ],
         'tstamp' => [
-            'sql' => ['type' => Types::INTEGER, 'unsigned' => true, 'default' => 0],
+            'sql' => [
+                'type' => Types::INTEGER,
+                'unsigned' => true,
+                'default' => 0,
+            ],
         ],
         'name' => [
             'inputType' => 'text',
@@ -55,7 +62,11 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'tl_class' => 'w50',
                 'decodeEntities' => true,
             ],
-            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 255,
+                'default' => '',
+            ],
         ],
         'logo' => [
             'inputType' => 'fileTree',
@@ -65,35 +76,56 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'filesOnly' => true,
                 'tl_class' => 'w50',
             ],
-            'sql' => ['type' => Types::BINARY, 'length' => 16, 'fixed' => true, 'notnull' => false],
+            'sql' => [
+                'type' => Types::BINARY,
+                'length' => 16,
+                'fixed' => true,
+                'notnull' => false,
+            ],
         ],
         'street' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
             ],
-            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 255,
+                'default' => '',
+            ],
         ],
         'postal' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w25',
             ],
-            'sql' => ['type' => Types::STRING, 'length' => 32, 'default' => ''],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 32,
+                'default' => '',
+            ],
         ],
         'city' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w25',
             ],
-            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 255,
+                'default' => '',
+            ],
         ],
         'state' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
             ],
-            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 255,
+                'default' => '',
+            ],
         ],
         'country' => [
             'inputType' => 'select',
@@ -102,14 +134,22 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'includeBlankOption' => true,
                 'chosen' => true,
             ],
-            'sql' => ['type' => Types::STRING, 'length' => 2, 'default' => ''],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 2,
+                'default' => '',
+            ],
         ],
         'vat' => [
             'inputType' => 'text',
             'eval' => [
                 'tl_class' => 'w50',
             ],
-            'sql' => ['type' => Types::STRING, 'length' => 255, 'default' => ''],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 255,
+                'default' => '',
+            ],
         ],
         'emails' => [
             'inputType' => 'rowWizard',
@@ -125,8 +165,14 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'w50 clr',
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
         'websites' => [
             'inputType' => 'rowWizard',
@@ -142,8 +188,14 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50'],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'w50',
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
         'phone_numbers' => [
             'inputType' => 'rowWizard',
@@ -159,8 +211,14 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'w50 clr',
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
         'fax_numbers' => [
             'inputType' => 'rowWizard',
@@ -176,8 +234,14 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50'],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'w50',
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
         'socials' => [
             'inputType' => 'rowWizard',
@@ -202,19 +266,40 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50 clr', 'sortable' => true],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'w50 clr',
+                'sortable' => true,
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
         'timezone' => [
             'inputType' => 'select',
-            'options_callback' => static fn () => array_values(DateTimeZone::listIdentifiers()),
-            'eval' => ['chosen' => true, 'tl_class' => 'w25 clr', 'includeBlankOption' => true],
-            'sql' => ['type' => Types::STRING, 'length' => 64, 'default' => ''],
+            'options_callback' => static fn (): array => array_values(DateTimeZone::listIdentifiers()),
+            'eval' => [
+                'chosen' => true,
+                'tl_class' => 'w25 clr',
+                'includeBlankOption' => true,
+            ],
+            'sql' => [
+                'type' => Types::STRING,
+                'length' => 64,
+                'default' => '',
+            ],
         ],
         'opening_times' => [
             'inputType' => 'openingTimesTable',
-            'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'w50 clr',
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
         'closing_times' => [
             'inputType' => 'rowWizard',
@@ -227,7 +312,9 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'start_time' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][3],
                     'inputType' => 'company_date',
-                    'eval' => ['time' => true],
+                    'eval' => [
+                        'time' => true,
+                    ],
                 ],
                 'stop' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][4],
@@ -236,7 +323,9 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                 'stop_time' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][5],
                     'inputType' => 'company_date',
-                    'eval' => ['time' => true],
+                    'eval' => [
+                        'time' => true,
+                    ],
                 ],
                 'reason' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_company']['closing_times'][6],
@@ -247,8 +336,15 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'clr', 'sortable' => false],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'clr',
+                'sortable' => false,
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
         'additional' => [
             'inputType' => 'rowWizard',
@@ -271,8 +367,15 @@ $GLOBALS['TL_DCA']['tl_company'] = [
                     ],
                 ],
             ],
-            'eval' => ['tl_class' => 'w50', 'sortable' => false],
-            'sql' => ['type' => Types::TEXT, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false],
+            'eval' => [
+                'tl_class' => 'w50',
+                'sortable' => false,
+            ],
+            'sql' => [
+                'type' => Types::TEXT,
+                'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT,
+                'notnull' => false,
+            ],
         ],
     ],
 ];

@@ -12,7 +12,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 readonly class SocialMediaOptionsListener
 {
     public function __construct(private EventDispatcherInterface $eventDispatcher)
-    {}
+    {
+    }
 
     #[AsCallback('tl_company', 'fields.socials.attributes')]
     public function getSocialMediaOptions(array $attributes, DataContainer $dc): array

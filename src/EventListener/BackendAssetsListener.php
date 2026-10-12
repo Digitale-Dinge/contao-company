@@ -14,7 +14,7 @@ readonly class BackendAssetsListener
 {
     public function __construct(
         private ScopeMatcher $scopeMatcher,
-        private Packages     $package,
+        private Packages $package,
     ) {
     }
 

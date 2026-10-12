@@ -17,8 +17,6 @@ use DigitaleDinge\CompanyBundle\Event\AddSocialMediaOptionsEvent;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
-use Zoglo\RteInsertTagsBundle\DependencyInjection\Attribute\AsRteInsertTag;
-use Zoglo\RteInsertTagsBundle\DependencyInjection\Attribute\Parameter\Choice;
 
 #[AsInsertTag('company')]
 #[AsInsertTag('company_id', method: 'resolveCompanyId')]
@@ -64,7 +62,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         $company = $this->company->get($companyId);
 
-        if (null === $company) {
+        if (!$company instanceof CompanyModel) {
             return new InsertTagResult('');
         }
 
@@ -109,7 +107,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
             'tel', 'mailto' => $this->twig->render('@Contao/company/component/_link.html.twig', [
                 'link' => $string,
                 'href' => $string,
-                'href_prefix' => $extra . ':',
+                'href_prefix' => $extra.':',
             ]),
             default => $string,
         };
@@ -123,9 +121,10 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
 
         $identifier ??= 1;
 
-        if (\is_numeric($identifier)) {
-            $value = $values[$identifier - 1] ?? [];
-            return (string) (count($value) === 1 ? reset($value) : $value['value'] ?? '');
+        if (is_numeric($identifier)) {
+            $value = $values[(int) $identifier - 1] ?? [];
+
+            return (string) (1 === \count($value) ? reset($value) : $value['value'] ?? '');
         }
 
         $list = array_column($values, 'value', 'key');
@@ -141,7 +140,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
         foreach ($socials as $social) {
             $key = $social['social'] ?? null;
 
-            if ($key !== $identifier || !isset($options[$key])) {
+            if (!\is_string($key) || $key !== $identifier || !isset($options[$key])) {
                 continue;
             }
 
@@ -158,7 +157,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         return $this->twig->render('@Contao/company/component/_address.html.twig', [
             'company_model' => $company,
-            'include_name' => $modifier === 'name',
+            'include_name' => 'name' === $modifier,
         ]);
     }
 
@@ -166,7 +165,7 @@ class CompanyInsertTag implements InsertTagResolverNestedResolvedInterface
     {
         return $this->twig->render('@Contao/company/logo.html.twig', [
             'company_model' => $company,
-            'logo_class' => $modifier
+            'logo_class' => $modifier,
         ]);
     }
 

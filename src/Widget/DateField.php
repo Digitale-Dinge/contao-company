@@ -7,6 +7,9 @@ namespace DigitaleDinge\CompanyBundle\Widget;
 use Contao\System;
 use Contao\TextField;
 
+/**
+ * @property bool $time
+ */
 class DateField extends TextField
 {
     public function generate(): string

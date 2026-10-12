@@ -16,12 +16,13 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement('company_opening_times', category: 'company')]
 class OpeningTimesController extends AbstractContentElementController
 {
-    public function __construct(readonly private Company $company)
-    {}
+    public function __construct(private readonly Company $company)
+    {
+    }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if (null === ($companyModel = $this->company->get($model->company))) {
+        if (!($companyModel = $this->company->get($model->company)) instanceof \DigitaleDinge\CompanyBundle\Model\CompanyModel) {
             return new Response();
         }
 

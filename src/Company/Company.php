@@ -36,17 +36,17 @@ class Company
 
         $this->framework->initialize();
 
-        return $this->cache[$id] ??=$this->framework->getAdapter(CompanyModel::class)->findById($id);
+        return $this->cache[$id] ??= $this->framework->getAdapter(CompanyModel::class)->findById($id);
     }
 
     public function getForCurrentPage(): CompanyModel|null
     {
-        if (!$page = $this->pageFinder->getCurrentPage()) {
+        if (!($page = $this->pageFinder->getCurrentPage()) instanceof PageModel) {
             return null;
         }
 
         $rootPage = $this->framework->getAdapter(PageModel::class)->findById($page->loadDetails()->rootId);
 
-        return $this->getForId((int) ($rootPage?->dd_company ?? 0));
+        return $this->getForId((int) ($rootPage->dd_company ?? 0));
     }
 }

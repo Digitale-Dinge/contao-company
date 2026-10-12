@@ -8,7 +8,7 @@ use DigitaleDinge\CompanyBundle\Widget;
 $GLOBALS['BE_MOD']['content']['company'] = [
     'tables' => [
         'tl_company',
-    ]
+    ],
 ];
 
 $GLOBALS['TL_MODELS']['tl_company'] = Model\CompanyModel::class;

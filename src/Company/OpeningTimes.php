@@ -10,7 +10,6 @@ use Contao\StringUtil;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
 use Spatie\OpeningHours\Day;
 use Spatie\OpeningHours\OpeningHours;
-use Spatie\OpeningHours\TimeRange;
 
 final class OpeningTimes
 {
@@ -21,14 +20,14 @@ final class OpeningTimes
     private array|null $specialOpeningHours = null;
 
     public function __construct(
-        readonly private CompanyModel $company,
-        readonly private InsertTagParser|null $insertTagParser = null,
+        private readonly CompanyModel $company,
+        private readonly InsertTagParser|null $insertTagParser = null,
     ) {
     }
 
     public function getOpeningHours(): OpeningHours
     {
-        if (null !== $this->openingHours) {
+        if ($this->openingHours instanceof OpeningHours) {
             return $this->openingHours;
         }
 
@@ -46,7 +45,8 @@ final class OpeningTimes
     {
         try {
             return new \DateTimeZone($this->company->timezone);
-        } catch (\Exception) {
+        }
+        catch (\Exception) {
             return new \DateTimeZone(date_default_timezone_get());
         }
     }
@@ -197,16 +197,29 @@ final class OpeningTimes
         return $windows;
     }
 
+    /**
+     * @return list<array{opens: string, closes: string}>
+     */
     private function getRanges(Day $day): array
     {
-        return $this->getOpeningHours()->forDay($day)->map(
-            static fn (TimeRange $range): array => [
+        $ranges = [];
+
+        foreach ($this->getOpeningHours()->forDay($day) as $range) {
+            $ranges[] = [
                 'opens' => (string) $range->start(),
                 'closes' => (string) $range->end(),
-            ],
-        );
+            ];
+        }
+
+        return $ranges;
     }
 
+    /**
+     * @param list<array{int, int}> $ranges
+     * @param array{int, int}       $window
+     *
+     * @return list<array{int, int}>
+     */
     private function subtractWindow(array $ranges, array $window): array
     {
         return array_merge(...array_map(
@@ -215,6 +228,12 @@ final class OpeningTimes
         ));
     }
 
+    /**
+     * @param array{int, int} $range
+     * @param array{int, int} $window
+     *
+     * @return list<array{int, int}>
+     */
     private function subtractWindowFromRange(array $range, array $window): array
     {
         [$opens, $closes] = $range;
@@ -241,29 +260,47 @@ final class OpeningTimes
                 'closes' => $range['closes'],
                 'validFrom' => $date,
                 'validThrough' => $date,
-                ...('' !== $description ? ['description' => $description] : []),
+                ...('' !== $description ? [
+                    'description' => $description,
+                ] : []),
             ],
-            $specialDay['ranges'] ?: [['opens' => '00:00', 'closes' => '00:00']],
+            $specialDay['ranges'] ?: [[
+                'opens' => '00:00',
+                'closes' => '00:00',
+            ]],
         );
     }
 
     private function parseReason(string $reason): string
     {
-        if ('' === $reason || null === $this->insertTagParser) {
+        if ('' === $reason || !$this->insertTagParser instanceof InsertTagParser) {
             return $reason;
         }
 
         return trim($this->insertTagParser->replaceInline($reason, OutputType::text));
     }
 
+    /**
+     * @param array{opens: string, closes: string} $range
+     *
+     * @return array{int, int}
+     */
     private function toMinuteRange(array $range): array
     {
         return [$this->toMinutes($range['opens']), $this->toMinutes($range['closes'])];
     }
 
+    /**
+     * @param array{int, int} $range
+     *
+     * @return array{opens: string, closes: string}
+     */
     private function toTimeRange(array $range): array
     {
-        return ['opens' => $this->toTime($range[0]), 'closes' => $this->toTime($range[1])];
+        return [
+            'opens' => $this->toTime($range[0]),
+            'closes' => $this->toTime($range[1]),
+        ];
     }
 
     private function toMinutes(string $time): int

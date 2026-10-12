@@ -30,10 +30,10 @@ use Symfony\Component\Uid\Uuid;
 class CompanySchemaController extends AbstractContentElementController
 {
     public function __construct(
-        readonly private Company $company,
-        readonly private PageFinder $pageFinder,
-        readonly private VirtualFilesystemInterface $filesStorage,
-        readonly private InsertTagParser $insertTagParser,
+        private readonly Company $company,
+        private readonly PageFinder $pageFinder,
+        private readonly VirtualFilesystemInterface $filesStorage,
+        private readonly InsertTagParser $insertTagParser,
     ) {
     }
 
@@ -42,7 +42,7 @@ class CompanySchemaController extends AbstractContentElementController
      */
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if (null === ($companyModel = $this->company->get($model->company))) {
+        if (!($companyModel = $this->company->get($model->company)) instanceof CompanyModel) {
             return new Response();
         }
 
@@ -83,18 +83,18 @@ class CompanySchemaController extends AbstractContentElementController
 
         return $schema
             ->name($company->name)
-            ->url($url)
+            ->setProperty('url', $url)
             ->setProperty('@id', $url)
-            ->logo($this->getLogoUrl($company->logo))
+            ->setProperty('logo', $this->getLogoUrl($company->logo))
             ->telephone($this->getColumn($company->phone_numbers, 'phone')[0] ?? null)
             ->faxNumber($this->getColumn($company->fax_numbers, 'fax')[0] ?? null)
             ->email($this->getColumn($company->emails, 'email')[0] ?? null)
             ->vatID($company->vat)
-            ->sameAs($this->getColumn($company->socials, 'url') ?: null)
+            ->setProperty('sameAs', $this->getColumn($company->socials, 'url') ?: null)
             ->if([] !== $address->getProperties(), static fn (LocalBusiness|Organization $schema) => $schema->address($address))
             ->if($schema instanceof LocalBusiness, static fn (LocalBusiness $schema) => $schema
-                ->openingHoursSpecification($openingTimes->getSchemaSpecification() ?: null)
-                ->specialOpeningHoursSpecification($openingTimes->getSchemaSpecialSpecification() ?: null),
+                ->setProperty('openingHoursSpecification', $openingTimes->getSchemaSpecification() ?: null)
+                ->setProperty('specialOpeningHoursSpecification', $openingTimes->getSchemaSpecialSpecification() ?: null),
             )
         ;
     }
@@ -112,14 +112,15 @@ class CompanySchemaController extends AbstractContentElementController
 
         try {
             return (string) $this->filesStorage->generatePublicUri(Uuid::fromBinary($uuid)) ?: null;
-        } catch (\Throwable) {
+        }
+        catch (\Throwable) {
             return null;
         }
     }
 
     private function getRootPageUrl(Request $request): string|null
     {
-        if (null === ($rootPage = $this->pageFinder->findRootPageForRequest($request))) {
+        if (!($rootPage = $this->pageFinder->findRootPageForRequest($request)) instanceof \Contao\PageModel) {
             return null;
         }
 

@@ -8,25 +8,25 @@ use Contao\Model;
 use Contao\Model\Collection;
 
 /**
- * @property integer $id
- * @property integer $tstamp
- * @property string  $name
- * @property string  $logo
- * @property string  $street
- * @property string  $postal
- * @property string  $city
- * @property string  $state
- * @property string  $country
- * @property string  $vat
- * @property string  $timezone
- * @property string  $opening_times
- * @property string  $closing_times
- * @property string  $phone_numbers
- * @property string  $emails
- * @property string  $websites
- * @property string  $fax_numbers
- * @property string  $socials
- * @property string  $additional
+ * @property int    $id
+ * @property int    $tstamp
+ * @property string $name
+ * @property string $logo
+ * @property string $street
+ * @property string $postal
+ * @property string $city
+ * @property string $state
+ * @property string $country
+ * @property string $vat
+ * @property string $timezone
+ * @property string $opening_times
+ * @property string $closing_times
+ * @property string $phone_numbers
+ * @property string $emails
+ * @property string $websites
+ * @property string $fax_numbers
+ * @property string $socials
+ * @property string $additional
  *
  * @method static CompanyModel|null findById($id, array $opt=[])
  * @method static CompanyModel|null findByPk($id, array $opt=[])
@@ -50,27 +50,27 @@ use Contao\Model\Collection;
  * @method static CompanyModel|null findOneBySocials($val, array $opt=[])
  * @method static CompanyModel|null findOneByAdditional($val, array $opt=[])
  *
- * @method static Collection|CompanyModel[]|CompanyModel|null findByTstamp($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByName($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByLogo($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByStreet($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByPostal($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByCity($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByState($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByCountry($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByVat($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByTimezone($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByOpening_times($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByClosing_times($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByPhone_numbers($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByEmails($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByWebsites($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByFax_numbers($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findBySocials($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findByAdditional($val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findMultipleByIds($var, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findBy($col, $val, array $opt=[])
- * @method static Collection|CompanyModel[]|CompanyModel|null findAll(array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByTstamp($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByName($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByLogo($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByStreet($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByPostal($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByCity($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByState($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByCountry($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByVat($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByTimezone($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByOpening_times($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByClosing_times($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByPhone_numbers($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByEmails($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByWebsites($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByFax_numbers($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findBySocials($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findByAdditional($val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findMultipleByIds($var, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findBy($col, $val, array $opt=[])
+ * @method static Collection<CompanyModel>|CompanyModel|null findAll(array $opt=[])
  *
  * @method static integer countById($id, array $opt=[])
  * @method static integer countByTstamp($val, array $opt=[])
