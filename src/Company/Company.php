@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DigitaleDinge\CompanyBundle\Company;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\PageModel;
 use DigitaleDinge\CompanyBundle\Model\CompanyModel;
@@ -13,7 +14,8 @@ class Company
     private array $cache = [];
 
     public function __construct(
-        readonly private PageFinder $pageFinder,
+        private readonly PageFinder $pageFinder,
+        private readonly ContaoFramework $framework,
     ) {
     }
 
@@ -32,7 +34,9 @@ class Company
             return null;
         }
 
-        return $this->cache[$id] ??= CompanyModel::findById($id);
+        $this->framework->initialize();
+
+        return $this->cache[$id] ??=$this->framework->getAdapter(CompanyModel::class)->findById($id);
     }
 
     public function getForCurrentPage(): CompanyModel|null
@@ -41,7 +45,7 @@ class Company
             return null;
         }
 
-        $rootPage = PageModel::findById($page->loadDetails()->rootId);
+        $rootPage = $this->framework->getAdapter(PageModel::class)->findById($page->loadDetails()->rootId);
 
         return $this->getForId((int) ($rootPage?->dd_company ?? 0));
     }
