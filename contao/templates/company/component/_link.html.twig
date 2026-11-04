@@ -1,13 +1,13 @@
 {% block link_component %}
-    {% set tag_name = href|default ? 'a' : 'span' %}
+    {% set link_href = href|default ? href_prefix|default ~ ('tel:' == href_prefix|default ? href|replace({' ': '', '/': ''}) : href) %}
+    {% set tag_name = link_href ? 'a' : 'span' %}
     {% set link_attributes = attrs(link_attributes|default)
         .addClass(class|default)
-        .set('href', href_prefix|default ~ href|default|encode_email, href|default)
         .set('target', '_blank', target_blank|default(false))
         .set('rel', 'noopener noreferrer', noreferrer|default(true))
         .setIfExists('title', title|default)
     %}
-    <{{ tag_name }}{{ link_attributes }}>
-        {%- block link_inner -%}{{ link|encode_email }}{% endblock %}
+    <{{ tag_name }}{% if link_href %} href="{{ link_href|e|encode_email }}"{% endif %}{{ link_attributes }}>
+        {%- block link_inner -%}{{ link|e|encode_email }}{% endblock %}
     </{{ tag_name }}>
 {% endblock %}
