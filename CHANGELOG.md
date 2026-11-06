@@ -4,6 +4,16 @@
 > Since 1.0.0, contao-company follows [semantic versioning][semver]. Breaking changes only happen in major versions.
 > Before 1.0.0, every minor version could contain breaking changes.
 
+## [1.1.2] (2026-11-06)
+
+**Tag:** [`1.1.2`][tag-1.1.2]
+
+**Branch:** `main`
+
+### Fixed
+
+- The logo's `alt` text was always the company name; `logo_alt` replaces it, an empty value included
+
 ## [1.1.1] (2026-11-04)
 
 **Tag:** [`1.1.1`][tag-1.1.1]
@@ -134,6 +144,7 @@ The first stable version. The bundle is the same as in 0.2.0. Semantic versionin
   the root page
 - Contao `^5.7` and `^6.0` are supported
 
+[1.1.2]: https://github.com/Digitale-Dinge/contao-company/compare/1.1.1...1.1.2
 [1.1.1]: https://github.com/Digitale-Dinge/contao-company/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/Digitale-Dinge/contao-company/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/Digitale-Dinge/contao-company/compare/0.2.0...1.0.0
@@ -142,6 +153,7 @@ The first stable version. The bundle is the same as in 0.2.0. Semantic versionin
 [0.1.0.1]: https://github.com/Digitale-Dinge/contao-company/compare/0.1.0...0.1.0.1
 [0.1.0]: https://github.com/Digitale-Dinge/contao-company/releases/tag/0.1.0
 
+[tag-1.1.2]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.1.2
 [tag-1.1.1]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.1.1
 [tag-1.1.0]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.1.0
 [tag-1.0.0]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.0.0

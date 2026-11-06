@@ -14,7 +14,7 @@
                     figure_attributes: {class: figure_class|default},
                     img_attributes: {
                         class: 'logo ' ~ logo_class|default,
-                        alt: company_model.name,
+                        alt: logo_alt ?? company_model.name,
                     },
                 }) }}
             {%- endblock -%}
