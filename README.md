@@ -43,6 +43,9 @@ Requires PHP `^8.4` and Contao `^5.7 || ^6.0`.
 
    Go to Content → Companies and create your company with the details you want to show on your site.
 
+   Opening times use the 24-hour format. The fields check each time while you type, mark the wrong field and show
+   the error below the table; saving checks the ranges as well.
+
 3. **Assign it to a root page**
 
    The Twig global and the insert tags resolve the company of the current page. Assign the company under Layout →

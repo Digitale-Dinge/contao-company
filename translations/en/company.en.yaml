@@ -3,6 +3,11 @@ company:
         day:            Day
         open_from:      From
         open_to:        To
+        time_placeholder: hh:mm
+        time_invalid:   "%day%: enter a time between 00:00 and 23:59."
+        time_incomplete: "%day%: enter the time as HH:MM, e.g. 08:30."
+        range_incomplete: "%day%: enter both an opening and a closing time."
+        range_order:    "%day%: the closing time must be after the opening time."
 
     opening_times:
         open_until:     "Open today until %time%"

@@ -4,6 +4,22 @@
 > Since 1.0.0, contao-company follows [semantic versioning][semver]. Breaking changes only happen in major versions.
 > Before 1.0.0, every minor version could contain breaking changes.
 
+## [1.2.0] (2026-11-19)
+
+**Tag:** [`1.2.0`][tag-1.2.0]
+
+**Branch:** `main`
+
+### Changed
+
+- The opening times use plain 24-hour text fields (`hh:mm`) instead of the native time inputs. They complete `830` to
+  `08:30` while you type, reject letters and mark wrong times right away ([#2])
+
+### Fixed
+
+- Invalid or incomplete opening times were dropped silently on save; the widget now shows an error and keeps the
+  record unsaved until they are fixed ([#2])
+
 ## [1.1.2] (2026-11-06)
 
 **Tag:** [`1.1.2`][tag-1.1.2]
@@ -144,6 +160,7 @@ The first stable version. The bundle is the same as in 0.2.0. Semantic versionin
   the root page
 - Contao `^5.7` and `^6.0` are supported
 
+[1.2.0]: https://github.com/Digitale-Dinge/contao-company/compare/1.1.2...1.2.0
 [1.1.2]: https://github.com/Digitale-Dinge/contao-company/compare/1.1.1...1.1.2
 [1.1.1]: https://github.com/Digitale-Dinge/contao-company/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/Digitale-Dinge/contao-company/compare/1.0.0...1.1.0
@@ -153,6 +170,7 @@ The first stable version. The bundle is the same as in 0.2.0. Semantic versionin
 [0.1.0.1]: https://github.com/Digitale-Dinge/contao-company/compare/0.1.0...0.1.0.1
 [0.1.0]: https://github.com/Digitale-Dinge/contao-company/releases/tag/0.1.0
 
+[tag-1.2.0]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.2.0
 [tag-1.1.2]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.1.2
 [tag-1.1.1]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.1.1
 [tag-1.1.0]: https://github.com/Digitale-Dinge/contao-company/releases/tag/1.1.0
@@ -161,6 +179,8 @@ The first stable version. The bundle is the same as in 0.2.0. Semantic versionin
 [tag-0.1.0.2]: https://github.com/Digitale-Dinge/contao-company/releases/tag/0.1.0.2
 [tag-0.1.0.1]: https://github.com/Digitale-Dinge/contao-company/releases/tag/0.1.0.1
 [tag-0.1.0]: https://github.com/Digitale-Dinge/contao-company/releases/tag/0.1.0
+
+[#2]: https://github.com/Digitale-Dinge/contao-company/issues/2
 
 [3bd45e2]: https://github.com/Digitale-Dinge/contao-company/commit/3bd45e241ac4b2a513137c79ce19afa361f5bee5
 [079e7b6]: https://github.com/Digitale-Dinge/contao-company/commit/079e7b6e805ee842325fbe496866e958af07598b

@@ -8,3 +8,6 @@ CTE:
     company_schema:
         - Strukturierte Daten
         - Fügt der Seite strukturierte Daten eines Unternehmens hinzu (keine sichtbare Ausgabe).
+
+ERR:
+    company_opening_times: Bitte korrigieren Sie die markierten Öffnungszeiten.
