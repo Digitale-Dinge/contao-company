@@ -62,7 +62,7 @@ tl_company:
 
     opening_times:
         - Opening times
-        - Here you can enter your opening hours. If there are breaks, two time ranges can be entered.
+        - 24-hour format, e.g. 08:30. Enter two ranges for breaks.
 
     closing_times:
         - Closing times

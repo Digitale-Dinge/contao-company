@@ -3,6 +3,11 @@ company:
         day:            Tag
         open_from:      Von
         open_to:        Bis
+        time_placeholder: hh:mm
+        time_invalid:   "%day%: Geben Sie eine Uhrzeit zwischen 00:00 und 23:59 ein."
+        time_incomplete: "%day%: Geben Sie die Uhrzeit als HH:MM ein, z. B. 08:30."
+        range_incomplete: "%day%: Geben Sie eine Öffnungs- und eine Schließzeit ein."
+        range_order:    "%day%: Die Schließzeit muss nach der Öffnungszeit liegen."
 
     opening_times:
         open_until:     "Heute geöffnet bis %time% Uhr"

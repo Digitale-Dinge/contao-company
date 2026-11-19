@@ -62,7 +62,7 @@ tl_company:
 
     opening_times:
         - Öffnungszeiten
-        - Hier können Sie Ihre Öffnungszeiten eintragen. Bei Pausen können zwei Zeiten eingetragen werden.
+        - 24-Stunden-Format, z. B. 08:30. Bei Pausen zwei Zeiträume eintragen.
 
     closing_times:
         - Schließzeiten

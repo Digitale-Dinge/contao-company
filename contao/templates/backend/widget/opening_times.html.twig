@@ -3,36 +3,124 @@
 {% set table_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
     .addClass('company_opening_times')
+    .set('data-company-times')
+    .set('data-time-invalid', 'company.widget.time_invalid'|trans([], 'company'))
+    .set('data-time-incomplete', 'company.widget.time_incomplete'|trans([], 'company'))
 %}
 
 <table{{ table_attributes }}>
     <thead>
         <tr>
             <th>{{ 'company.widget.day'|trans([], 'company') }}</th>
-            <th>{{ 'company.widget.open_from'|trans([], 'company') }}</th>
-            <th>{{ 'company.widget.open_to'|trans([], 'company') }}</th>
-            <th>{{ 'company.widget.open_from'|trans([], 'company') }}</th>
-            <th>{{ 'company.widget.open_to'|trans([], 'company') }}</th>
+            <th id="{{ id }}_head_0">{{ 'company.widget.open_from'|trans([], 'company') }}</th>
+            <th id="{{ id }}_head_1">{{ 'company.widget.open_to'|trans([], 'company') }}</th>
+            <th id="{{ id }}_head_2">{{ 'company.widget.open_from'|trans([], 'company') }}</th>
+            <th id="{{ id }}_head_3">{{ 'company.widget.open_to'|trans([], 'company') }}</th>
         </tr>
     </thead>
     <tbody>
         {% for row in rows %}
             {% set row_index = loop.index0 %}
-            <tr>
-                <th scope="row">{{ ('DAYS.' ~ (loop.index % 7))|trans }}</th>
+            {% set day_id = "#{id}_day_#{row_index}" %}
+            {% set day_name = ('DAYS.' ~ (loop.index % 7))|trans %}
+            {% set row_attrs = attrs()
+                .set('data-company-day', day_name)
+                .set('data-error', row_errors[row_index]|default|trans({'%day%': day_name}, 'company'), row_errors[row_index] is defined)
+            %}
+            <tr{{ row_attrs }}>
+                <th scope="row" id="{{ day_id }}">{{ day_name }}</th>
                 {% for item in row %}
-                <td>
-                    {% set time_attrs = attrs()
-                        .set('type', 'time')
-                        .set('name', "#{id}[#{row_index}][#{loop.index0}]")
-                        .set('id', "#{id}_#{loop.index0}_#{row_index}")
-                        .set('value', item)
-                        .addClass('tl_text')
-                    %}
-                    <input{{ time_attrs }}>
-                </td>
+                    {% block time_field %}
+                        <td>
+                            {% set time_attrs = attrs()
+                                .set('type', 'text')
+                                .set('inputmode', 'numeric')
+                                .set('maxlength', 5)
+                                .set('pattern', '([01][0-9]|2[0-3]):[0-5][0-9]')
+                                .set('placeholder', 'company.widget.time_placeholder'|trans([], 'company'))
+                                .set('autocomplete', 'off')
+                                .set('name', "#{id}[#{row_index}][#{loop.index0}]")
+                                .set('id', "#{id}_#{loop.index0}_#{row_index}")
+                                .set('value', item)
+                                .set('aria-labelledby', "#{day_id} #{id}_head_#{loop.index0}")
+                                .set('aria-describedby', "#{id}_error")
+                                .set('aria-invalid', 'true', invalid_fields[row_index][loop.index0] ?? false)
+                                .set('onbeforeinput', 'companyTimeFilter(event)')
+                                .set('oninput', 'companyTimeInput(this, event)')
+                                .set('onblur', 'companyTimeBlur(this)')
+                                .set('data-company-time')
+                                .addClass('tl_text')
+                            %}
+                            <input{{ time_attrs }}>
+                        </td>
+                    {% endblock %}
                 {% endfor %}
             </tr>
         {% endfor %}
     </tbody>
 </table>
+{% set first_error_day = row_errors|keys|first %}
+<div class="company_opening_times_error" aria-live="polite">
+    <p{{ attrs().set('id', id ~ '_error').addClass('tl_error').set('hidden', row_errors is empty) }}>
+        {%- if row_errors is not empty -%}
+            {{ row_errors|first|trans({'%day%': ('DAYS.' ~ ((first_error_day + 1) % 7))|trans}, 'company') }}
+        {%- endif -%}
+    </p>
+</div>
+
+<script>
+    function companyTimeFilter(event) {
+        if (event.data && !/^[\d:]+$/.test(event.data)) {
+            event.preventDefault();
+        }
+    }
+
+    function companyTimeInput(field, event) {
+        let value = field.value.replace('::', ':');
+
+        if (!event.inputType?.startsWith('delete') && field.selectionStart === field.value.length) {
+            if (value.indexOf(':') === 1 || (value.length === 1 && Number(value) > 2)) {
+                value = `0${value}`;
+            }
+
+            field.value = value.length > 1 && value[2] !== ':' ? `${value.slice(0, 2)}:${value.slice(2)}` : value;
+        }
+
+        companyTimeCheck(field, false);
+    }
+
+    function companyTimeBlur(field) {
+        if (field.value.length === 3 && field.value.endsWith(':')) {
+            field.value += '00';
+        }
+
+        companyTimeCheck(field, true);
+    }
+
+    function companyTimeCheck(field, leaving) {
+        const table = field.closest('[data-company-times]');
+        const day = field.closest('[data-company-day]');
+        const output = document.getElementById(field.getAttribute('aria-describedby'));
+        let error = '';
+
+        for (const time of day.querySelectorAll('[data-company-time]')) {
+            const [hours, minutes = ''] = time.value.split(':');
+            const invalid = !(Number(hours) <= 23 && Number(minutes.padEnd(2, '0')) <= 59);
+            const incomplete = leaving && time === field && time.validity.patternMismatch;
+
+            time.ariaInvalid = invalid || incomplete ? 'true' : null;
+            error ||= invalid ? table.dataset.timeInvalid : incomplete ? table.dataset.timeIncomplete : '';
+        }
+
+        if (error !== '' || !leaving) {
+            day.dataset.error = error.replace('%day%', day.dataset.companyDay);
+        }
+
+        const message = table.querySelector('[data-error]:not([data-error=""])')?.dataset.error ?? '';
+
+        if (output.textContent !== message) {
+            output.textContent = message;
+            output.hidden = message === '';
+        }
+    }
+</script>
